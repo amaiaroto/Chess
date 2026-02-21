@@ -3,7 +3,7 @@ import Pieces
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int], screen, pg,
-                 fen="RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr"):
+                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
         self.valid = None
         self.black_color = (80, 43, 17)
         self.white_color = (203, 198, 172)
@@ -35,8 +35,9 @@ class Board:
     def readFEN(fen):
         """
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
-        :return:
+        :return: a {{}} of classes
         """
+        # fen = ''.join(list(list(fen).__reversed__())) # flip the board
         state = {}
         rp = 8
         rows = fen.split('/')
@@ -56,7 +57,7 @@ class Board:
                     current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
-        return state
+        return {k: state[k] for k in list(reversed(state.keys()))}
 
     def printASCII(self):
         board = ""
@@ -80,16 +81,29 @@ class Board:
         :param r: 1 based
         :return:
         """
-        return self.state[r][Board.get_letter_from_index(c)]
+        try:
+            assert r != 0 and c != 0
+
+            if c > 8:
+                raise KeyError
+
+            return self.state[r][Board.get_letter_from_index(c)]
+
+        except AssertionError:
+            return None
+
+        except KeyError:
+            return None
+
         # return self.state[list(self.state.keys())[(x - self.bx) // self.cw]][
         #     {k: v for k, v in self.state.items()}[alphabet_real[(y - self.by) // self.ch]]]
 
     def get_cell(self, x, y):
-        c, r = (x - self.bx) // self.cw, (y - self.by) // self.ch
-        return c + 1, r + 1
+        c, r = (x - self.bx) // self.cw + 1, self.rows - (y - self.by) // self.ch
+        return c, r
 
     def get_cell_center(self, c, r):
-        return (c - 1) * self.cw + self.cw // 2, (self.rows - r) * self.ch + self.ch // 2
+        return (c - 1) * self.cw + self.cw // 2 + self.bx, (self.rows - r) * self.ch + self.ch // 2 + self.by
 
     def is_valid_cell(self, c, r):
         return 0 < c <= self.columns and 0 < r <= self.rows
@@ -102,29 +116,13 @@ class Board:
         """
         c, r = self.get_cell(x, y)
         piece = self.get_piece_at(c, r)
+
         if piece is not None:
             self.valid = piece.get_valid_moves(self)
+
             return self.valid
+
         return None
-        # if piece_name is None:
-        #     piece_name = Pieces.Piece.create_piece(self.get_piece_at(*self.get_cell(x, y)), x, y) if self.get_piece_at(
-        #         *self.get_cell(x, y)) is not None else str
-        #     piece_name = piece_name()
-        #
-        # """
-        # mark in a field of this class the list of valid moves available for the piece in the cell
-        # under x,y
-        #
-        # :param x:
-        # :param y:
-        # :return:
-        # """
-        # c, r = self.get_cell(x, y)
-        # piece = Pieces.Piece.create_piece(piece_name if isinstance(piece_name, str) else piece_name.get_name(), c,
-        #                                   r)
-        # moves = piece.get_valid_moves()
-        # self.valid = moves
-        # print(self.valid)
 
     def draw(self):
         square_size = min(self.screen.get_width(), self.screen.get_height()) // (max(self.rows, self.columns) + 2)
@@ -134,6 +132,7 @@ class Board:
 
             for r in range(1, self.rows + 1):
                 x, y = square_size * c, square_size * r
+
                 if c + r == 2:
                     self.bx, self.by = x, y
                     self.cw = square_size
@@ -142,10 +141,11 @@ class Board:
                 self.pg.draw.rect(self.screen, self.white_color if (c + r) % 2 == 0 else self.black_color,
                                   self.pg.Rect(x, y, square_size, square_size))
 
-                if self.state[r][lc] is not None:
+                real_r = (self.rows - r) + 1
+                if self.state[real_r][lc] is not None:
                     icon = self.pg.font.Font('DejaVuSans.ttf', square_size).render(
-                        self.state[r][lc].get_icon(), True,
-                        (255, 255, 255) if self.state[r][lc].is_white() else (0, 0, 0))
+                        self.state[real_r][lc].get_icon(), True,
+                        (255, 255, 255) if self.state[real_r][lc].is_white() else (0, 0, 0))
 
                     self.screen.blit(icon, (square_size * c, square_size * r))
 

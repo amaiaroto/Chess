@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;" />
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="Commit Message">
+      <change beforePath="$PROJECT_DIR$/Chess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chess.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,8 +19,19 @@
       </list>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;amaiaroto&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/amaiaroto/Chess.git&quot;,
+    &quot;accountId&quot;: &quot;375a0bec-9d95-4f9a-a32b-b92d4122d273&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/main.py" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -48,6 +61,9 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\asher\PycharmProjects\Chess" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
     </key>
   </component>
@@ -165,14 +181,39 @@
       <option name="project" value="LOCAL" />
       <updated>1771704807289</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;">
+      <option name="closed" value="true" />
+      <created>1771705709674</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1771705709674</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Commit Message">
+      <option name="closed" value="true" />
+      <created>1771706001964</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1771706001964</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Commit Message">
+      <option name="closed" value="true" />
+      <created>1772246911752</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1772246911752</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Chess.py  main&#10;Board.py  draw&#10;Screen.py  screen&#10;Pieces.py object" />
     <MESSAGE value="Chess.py  main&#10;Board.py  draw&#10;Screen.py  screen&#10;Pieces.py object&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;" />
     <MESSAGE value="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;" />
+    <MESSAGE value="Commit Message" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit Message" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

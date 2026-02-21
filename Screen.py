@@ -1,6 +1,3 @@
-import runpy
-
-
 class Screen:
     def __init__(self, pygame_object, screen_width: int, screen_height: int, options: list = None):
         self.width = screen_width
@@ -10,8 +7,6 @@ class Screen:
 
     @property
     def screen(self):
-        return self.pg.display.set_mode((self.width, self.height), *self.options if self.options else [self.pg.SCALED])
-
-
-if __name__ == '__main__':
-    runpy.run_path('Chess.py')
+        return self.pg.display.set_mode(
+            (self.width, self.height),
+            *self.options if self.options else [self.pg.SCALED])

@@ -1,5 +1,3 @@
-import Board
-
 piece_icons: dict[str, str] = {
     'K': '♔',
     'Q': '♕',
@@ -17,20 +15,29 @@ piece_icons: dict[str, str] = {
 }
 
 
+def list_sum(l):
+    r = []
+
+    for i in l:
+        r.extend(i)
+
+    return r
+
+
 class PieceError(BaseException):
-    def __init__(self, name):
-        self.error = name
+    def __init__(self, name: str):
+        self.error: str = name
 
     def __str__(self):
         return self.error
 
 
 class Piece:
-    def __init__(self, name, col: int, row: int):
-        self.piece = name
-        self.color = name.isupper()  # uppercase is w
-        self.col = col
-        self.row = row
+    def __init__(self, name: str, col: int, row: int):
+        self.piece: str = name
+        self.color: bool = name.isupper()  # uppercase is w
+        self.col: int = col
+        self.row: int = row
 
     def is_white(self):
         return self.color
@@ -40,10 +47,11 @@ class Piece:
 
     def get_icon(self):
         global piece_icons
+
         return piece_icons[self.get_name()]
 
-    def get_valid_moves(self, board: Board):
-        valid_moves = []
+    def get_valid_moves(self, board):
+        ...
 
     def move(self, col, row):
         pass
@@ -94,145 +102,118 @@ class Piece:
 
         raise PieceError('Not valid name')
 
+    def line_movement(self, dr: int, dc: int, board, max_range):
+        c = self.col
+        r = self.row
+        valid_moves = []
+
+        for n in range(max(board.columns, board.columns)):
+            c += dc
+            r += dr
+
+            if n >= max_range:
+                break
+
+            if not board.is_valid_cell(c, r):
+                break
+
+            if board.get_piece_at(c, r) is None:
+                valid_moves.append((c, r))
+
+            else:
+                break
+
+        return valid_moves
+
 
 class Pawn(Piece):
-    def get_valid_moves(self, board: Board):
-
+    def get_valid_moves(self, board):
         def move(m):
-            pos = (self.col + 1, self.row + m)
-            if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is not None:
-                valid_moves.append(pos)
-            pos = (self.col - 1, self.row + m)
-            if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is not None:
-                valid_moves.append(pos)
-            # normal
-            pos = (self.col, self.row + m)
-            if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is None:
-                valid_moves.append(pos)
-                if (m > 0 and self.row == 2) or (m < 0 and self.row == (board.rows - 1)):
-                    pos = (self.col, self.row + m)
-                    if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is None:
-                        valid_moves.append((self.col, self.row + 2 * m))
+            # attack / capture; \ /
+            if board.get_piece_at(self.col + 1, self.row + 1) is not None and \
+                    board.get_piece_at(self.col + 1, self.row + 1).color != self.color:
+                valid_moves.append((self.col + 1, self.row + 1))
 
-        valid_moves = []
+            if board.get_piece_at(self.col - 1, self.row + 1) is not None and \
+                    board.get_piece_at(self.col - 1, self.row + 1).color != self.color:
+                valid_moves.append((self.col - 1, self.row + 1))
+
+            # normal !
+            valid_moves.extend(self.line_movement(m, 0, board, 1))
+
+            if (m > 0 and self.row == board.rows // 4) or (m < 0 and self.row == board.rows - 1):
+                # double; |\n         !
+                valid_moves.extend(self.line_movement(m, 0, board, 1))
+
+        valid_moves: list[tuple] = []
+
         if self.color == board.turn:
-            move(-1 if self.color else 1)
+            move(1 if self.color else -1)
+
         return valid_moves
 
 
 class Rook(Piece):
-    def get_valid_moves(self, board: Board):
-        valid_moves = []
+    def get_valid_moves(self, board):
+        a = self.line_movement(1, 0, board, 9)
+        b = self.line_movement(-1, 0, board, 9)
+        c = self.line_movement(0, 1, board, 9)
+        d = self.line_movement(0, -1, board, 9)
 
-        for r in range(1, board.rows + 1):
-            valid_moves.append((self.col, r))
+        o = [a, b, c, d]
 
-        for c in range(1, board.columns + 1):
-            valid_moves.append((c, self.row))
+        return list_sum(o)
 
-        del valid_moves[valid_moves.index((self.col, self.row))]
+
+class Knight(Piece):
+    def get_valid_moves(self, board):
+        valid_moves: list[tuple] = []
 
         return valid_moves
 
 
-class Knight(Piece):
-    def get_valid_moves(self, board: Board):
-        valid_moves = []
-
-
 class Bishop(Piece):
-    def get_valid_moves(self, board: Board):
-        valid_moves = []
+    def get_valid_moves(self, board):
+        a = self.line_movement(-1, 1, board, 9)
+        b = self.line_movement(1, -1, board, 9)
+        c = self.line_movement(1, 1, board, 9)
+        d = self.line_movement(-1, -1, board, 9)
+
+        o = [a, b, c, d]
+
+        return list_sum(o)
 
 
 class Queen(Piece):
-    def get_valid_moves(self, board: Board):
-        valid_moves = []
+    def get_valid_moves(self, board):
+        # - & |
+        a = self.line_movement(1, 0, board, 9)
+        b = self.line_movement(-1, 0, board, 9)
+        c = self.line_movement(0, 1, board, 9)
+        d = self.line_movement(0, -1, board, 9)
+
+        # \ & /
+        e = self.line_movement(-1, 1, board, 9)
+        f = self.line_movement(1, -1, board, 9)
+        g = self.line_movement(1, 1, board, 9)
+        h = self.line_movement(-1, -1, board, 9)
+
+        o = [a, b, c, d, e, f, g, h]
+
+        return list_sum(o)
 
 
 class King(Piece):
-    def get_valid_moves(self, board: Board):
-        valid_moves = [(self.col + 1, self.row), (self.col - 1, self.row), (self.col, self.row + 1),
-                       (self.col, self.row - 1), (self.col + 1, self.row + 1), (self.col - 1, self.row - 1),
-                       (self.col + 1, self.row - 1), (self.col - 1, self.row + 1)]
+    def get_valid_moves(self, board):
+        a = self.line_movement(1, 0, board, 1)
+        b = self.line_movement(1, 1, board, 1)
+        c = self.line_movement(0, 1, board, 1)
+        d = self.line_movement(-1, 0, board, 1)
+        e = self.line_movement(-1, 1, board, 1)
+        f = self.line_movement(-1, -1, board, 1)
+        g = self.line_movement(0, -1, board, 1)
+        h = self.line_movement(1, -1, board, 1)
 
-        if self.col == 8:
-            try:
-                valid_moves.remove((self.col + 1, self.row))
+        o = [a, b, c, d, e, f, g, h]
 
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.col + 1, self.row + 1))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.col + 1, self.row - 1))
-
-            except ValueError:
-                pass
-
-        if self.col == 1:
-            try:
-                valid_moves.remove((self.col - 1, self.row))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.col - 1, self.row - 1))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.col - 1, self.row + 1))
-
-            except ValueError:
-                pass
-
-        if self.row == 8:
-            try:
-                valid_moves.remove((self.row + 1, self.col))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.row + 1, self.col - 1))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.row + 1, self.col + 1))
-
-            except ValueError:
-                pass
-
-        if self.row == 1:
-            try:
-                valid_moves.remove((self.row - 1, self.col))
-
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.row - 1, self.col - 1))
-            except ValueError:
-                pass
-
-            try:
-                valid_moves.remove((self.row - 1, self.col + 1))
-            except ValueError:
-                pass
-
-        if valid_moves:
-
-            return valid_moves
-
-        else:
-            return 'stalemate' if False else 'checkmate'
+        return list_sum(o)
