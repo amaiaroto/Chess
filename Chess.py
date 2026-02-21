@@ -75,7 +75,9 @@ def exit_chess(code: int | str = 0):
 
 def start_chess():
     global title_screen
+
     title_screen = False
+
     return title_screen
 
 

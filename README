@@ -3,3 +3,22 @@
     title screen ^
     MAIN:
     checkerboard ✅. AND letters and numbers
+ # if piece_name is None:
+        #     piece_name = Pieces.Piece.create_piece(self.get_piece_at(*self.get_cell(x, y)), x, y) if self.get_piece_at(
+        #         *self.get_cell(x, y)) is not None else str
+        #     piece_name = piece_name()
+        #
+        # """
+        # mark in a field of this class the list of valid moves available for the piece in the cell
+        # under x,y
+        #
+        # :param x:
+        # :param y:
+        # :return:
+        # """
+        # c, r = self.get_cell(x, y)
+        # piece = Pieces.Piece.create_piece(piece_name if isinstance(piece_name, str) else piece_name.get_name(), c,
+        #                                   r)
+        # moves = piece.get_valid_moves()
+        # self.valid = moves
+        # print(self.valid)

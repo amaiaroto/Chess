@@ -10,7 +10,9 @@ class Screen:
 
     @property
     def screen(self):
-        return self.pg.display.set_mode((self.width, self.height), *self.options if self.options else [self.pg.SCALED])
+        return self.pg.display.set_mode(
+            (self.width, self.height),
+            *self.options if self.options else [self.pg.SCALED])
 
 
 if __name__ == '__main__':

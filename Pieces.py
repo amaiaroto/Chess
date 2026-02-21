@@ -40,6 +40,7 @@ class Piece:
 
     def get_icon(self):
         global piece_icons
+
         return piece_icons[self.get_name()]
 
     def get_valid_moves(self, board: Board):
@@ -100,17 +101,24 @@ class Pawn(Piece):
 
         def move(m):
             pos = (self.col + 1, self.row + m)
+
             if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is not None:
                 valid_moves.append(pos)
+
             pos = (self.col - 1, self.row + m)
+
             if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is not None:
                 valid_moves.append(pos)
+
             # normal
             pos = (self.col, self.row + m)
+
             if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is None:
                 valid_moves.append(pos)
+
                 if (m > 0 and self.row == 2) or (m < 0 and self.row == (board.rows - 1)):
                     pos = (self.col, self.row + m)
+
                     if board.is_valid_cell(*pos) and board.get_piece_at(*pos) is None:
                         valid_moves.append((self.col, self.row + 2 * m))
 
