@@ -95,7 +95,7 @@ while True:
     for event in pg.event.get():
         if not title_screen and event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
-            print(board.flag_valid_moves(x, y))
+            board.handle_click(x, y)
 
         if event.type == pg.QUIT:
             exit_chess()
@@ -124,7 +124,7 @@ while True:
             quit_button.draw(screen)
 
             if play_button.clicked() or kb.is_pressed('enter'):
-                board = Board((8, 8), screen, pg, 'rnbqkbnr/1ppppppp/p7/1P1B4/2R2KP1/7P/PP1PPPP1/RNBQ1BNR')
+                board = Board((8, 8), screen, pg, 'rnbqkbnr/1ppppppp/p7/1P1B4/2RN1KP1/7P/PP1P1PP1/RNBQ1BNR')
                 start_chess()
 
             elif quit_button.clicked():
@@ -142,7 +142,8 @@ while True:
                 sound.play()
 
         else:
-            back_button = Button(10, 10, 53, 53, '\u21A9[a]', button_font2, (255, 0, 0), (200, 0, 0))
+            back_button = Button(10, 10, 53, 53, '\u21A9[↩]', button_font2,
+                                 (255, 0, 0), (200, 0, 0))
             back_button.draw(screen)
             board.draw()
 

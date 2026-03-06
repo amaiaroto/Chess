@@ -1,3 +1,5 @@
+# from Chess import board
+
 piece_icons: dict[str, str] = {
     'K': '♔',
     'Q': '♕',
@@ -50,11 +52,19 @@ class Piece:
 
         return piece_icons[self.get_name()]
 
-    def get_valid_moves(self, board):
+    def get_valid_moves(self, board, c=None, r=None):
+        if not c:
+            c = self.col
+        if not r:
+            r = self.row
+            
         ...
 
-    def move(self, col, row):
-        pass
+    def go_to(self, c, r):
+        self.col = c
+        self.row = r
+
+        return self.col, self.row
 
     @staticmethod
     def create_piece(name: str, col, row):
@@ -102,7 +112,14 @@ class Piece:
 
         raise PieceError('Not valid name')
 
-    def line_movement(self, dr: int, dc: int, board, max_range):
+    def line_movement(self, dr: int, dc: int, board, max_range, color):
+        """
+        :param dr: delta row
+        :param dc: delta col
+        :param board: the board
+        :param max_range: 0 based
+        :return: valid moves
+        """
         c = self.col
         r = self.row
         valid_moves = []
@@ -111,9 +128,6 @@ class Piece:
             c += dc
             r += dr
 
-            if n >= max_range:
-                break
-
             if not board.is_valid_cell(c, r):
                 break
 
@@ -121,13 +135,16 @@ class Piece:
                 valid_moves.append((c, r))
 
             else:
+                valid_moves.append((c, r))
+                break
+            if n >= max_range:
                 break
 
         return valid_moves
 
 
 class Pawn(Piece):
-    def get_valid_moves(self, board):
+    def get_valid_moves(self, board, c=None, r=None):
         def move(m):
             # attack / capture; \ /
             if board.get_piece_at(self.col + 1, self.row + 1) is not None and \
@@ -138,12 +155,12 @@ class Pawn(Piece):
                     board.get_piece_at(self.col - 1, self.row + 1).color != self.color:
                 valid_moves.append((self.col - 1, self.row + 1))
 
-            # normal !
-            valid_moves.extend(self.line_movement(m, 0, board, 1))
-
-            if (m > 0 and self.row == board.rows // 4) or (m < 0 and self.row == board.rows - 1):
+            if (m > 0 and self.row == 2) or (m < 0 and self.row == board.rows - 1):
                 # double; |\n         !
-                valid_moves.extend(self.line_movement(m, 0, board, 1))
+                valid_moves.extend(self.line_movement(m, 0, board, 1, self.color))
+            else:
+                # normal !
+                valid_moves.extend(self.line_movement(m, 0, board, 0, self.color))
 
         valid_moves: list[tuple] = []
 
@@ -154,11 +171,11 @@ class Pawn(Piece):
 
 
 class Rook(Piece):
-    def get_valid_moves(self, board):
-        a = self.line_movement(1, 0, board, 9)
-        b = self.line_movement(-1, 0, board, 9)
-        c = self.line_movement(0, 1, board, 9)
-        d = self.line_movement(0, -1, board, 9)
+    def get_valid_moves(self, board, c=None, r=None):
+        a = self.line_movement(1, 0, board, 8, self.color)
+        b = self.line_movement(-1, 0, board, 8, self.color)
+        c = self.line_movement(0, 1, board, 8, self.color)
+        d = self.line_movement(0, -1, board, 8, self.color)
 
         o = [a, b, c, d]
 
@@ -166,18 +183,29 @@ class Rook(Piece):
 
 
 class Knight(Piece):
-    def get_valid_moves(self, board):
+    def get_valid_moves(self, board, c=None, r=None):
         valid_moves: list[tuple] = []
+        moves = {0: (self.col + 2, self.row + 1), 1: (self.col + 2, self.row - 1), 2: (self.col + 1, self.row + 2),
+                 3: (self.col - 1, self.row + 2), 4: (self.col + 1, self.row - 2), 5: (self.col - 2, self.row - 1),
+                 6: (self.col - 2, self.row + 1), 7: (self.col - 1, self.row - 2)}
+
+        for p in range(len(moves)):
+            if board.is_valid_cell(*moves[p]):
+                if board.get_piece_at(*moves[p]) is not None:
+                    if board.get_piece_at(*moves[p]).color != self.color:
+                        valid_moves.append(moves[p])
+                else:
+                    valid_moves.append(moves[p])
 
         return valid_moves
 
 
 class Bishop(Piece):
-    def get_valid_moves(self, board):
-        a = self.line_movement(-1, 1, board, 9)
-        b = self.line_movement(1, -1, board, 9)
-        c = self.line_movement(1, 1, board, 9)
-        d = self.line_movement(-1, -1, board, 9)
+    def get_valid_moves(self, board, c=None, r=None):
+        a = self.line_movement(-1, 1, board, 8, self.color)
+        b = self.line_movement(1, -1, board, 8, self.color)
+        c = self.line_movement(1, 1, board, 8, self.color)
+        d = self.line_movement(-1, -1, board, 8, self.color)
 
         o = [a, b, c, d]
 
@@ -185,18 +213,18 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
-    def get_valid_moves(self, board):
+    def get_valid_moves(self, board, c=None, r=None):
         # - & |
-        a = self.line_movement(1, 0, board, 9)
-        b = self.line_movement(-1, 0, board, 9)
-        c = self.line_movement(0, 1, board, 9)
-        d = self.line_movement(0, -1, board, 9)
+        a = self.line_movement(1, 0, board, 8, self.color)
+        b = self.line_movement(-1, 0, board, 8, self.color)
+        c = self.line_movement(0, 1, board, 8, self.color)
+        d = self.line_movement(0, -1, board, 8, self.color)
 
         # \ & /
-        e = self.line_movement(-1, 1, board, 9)
-        f = self.line_movement(1, -1, board, 9)
-        g = self.line_movement(1, 1, board, 9)
-        h = self.line_movement(-1, -1, board, 9)
+        e = self.line_movement(-1, 1, board, 8, self.color)
+        f = self.line_movement(1, -1, board, 8, self.color)
+        g = self.line_movement(1, 1, board, 8, self.color)
+        h = self.line_movement(-1, -1, board, 8, self.color)
 
         o = [a, b, c, d, e, f, g, h]
 
@@ -204,15 +232,15 @@ class Queen(Piece):
 
 
 class King(Piece):
-    def get_valid_moves(self, board):
-        a = self.line_movement(1, 0, board, 1)
-        b = self.line_movement(1, 1, board, 1)
-        c = self.line_movement(0, 1, board, 1)
-        d = self.line_movement(-1, 0, board, 1)
-        e = self.line_movement(-1, 1, board, 1)
-        f = self.line_movement(-1, -1, board, 1)
-        g = self.line_movement(0, -1, board, 1)
-        h = self.line_movement(1, -1, board, 1)
+    def get_valid_moves(self, board, c=None, r=None):
+        a = self.line_movement(1, 0, board, 0, self.color)
+        b = self.line_movement(1, 1, board, 0, self.color)
+        c = self.line_movement(0, 1, board, 0, self.color)
+        d = self.line_movement(-1, 0, board, 0, self.color)
+        e = self.line_movement(-1, 1, board, 0, self.color)
+        f = self.line_movement(-1, -1, board, 0, self.color)
+        g = self.line_movement(0, -1, board, 0, self.color)
+        h = self.line_movement(1, -1, board, 0, self.color)
 
         o = [a, b, c, d, e, f, g, h]
 

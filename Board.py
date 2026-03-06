@@ -1,10 +1,14 @@
 import Pieces
 
+toggle = False
+
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int], screen, pg,
                  fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
         self.valid = None
+        self.picked_piece: Pieces.Piece
+        self.picked_piece = None
         self.black_color = (80, 43, 17)
         self.white_color = (203, 198, 172)
         self.columns, self.rows = grid_cx_ry
@@ -98,7 +102,24 @@ class Board:
         # return self.state[list(self.state.keys())[(x - self.bx) // self.cw]][
         #     {k: v for k, v in self.state.items()}[alphabet_real[(y - self.by) // self.ch]]]
 
+    def go_to(self, c, r, piece):
+        """
+        :param c:
+        :param r:
+        :param piece: this is going to be moved from piece.row/col to c,r
+        :return:
+        """
+        self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
+        self.state[r][Board.get_letter_from_index(c)] = piece
+        piece.go_to(c, r)
+
+
     def get_cell(self, x, y):
+        """
+        :param x: point x
+        :param y: point y
+        :return: cell location on board
+        """
         c, r = (x - self.bx) // self.cw + 1, self.rows - (y - self.by) // self.ch
         return c, r
 
@@ -157,3 +178,58 @@ class Board:
         # if self.moves is not None:
         #     for move in self.moves:
         #         draw circle at move
+
+    def handle_click(self, x, y):
+        c, r = self.get_cell(x, y)
+        piece: Pieces.Piece = self.get_piece_at(c, r)
+        has_valid_moves = self.valid is not None and len(self.valid) > 0
+        print(piece, has_valid_moves, c, r)
+        if piece is None and not has_valid_moves:
+            pass
+
+        elif piece is None and has_valid_moves:
+            if (c, r) in self.valid:
+                self.go_to(c, r, self.picked_piece)
+            self.valid = []
+            self.picked_piece = None
+
+        elif piece is not None and not has_valid_moves:
+            self.valid = piece.get_valid_moves(self)
+            self.picked_piece = piece
+
+        else:
+            # Yes & Yes
+            print((c, r) not in self.valid, piece == self.picked_piece)
+            if (c, r) not in self.valid:
+                if piece == self.picked_piece:
+                    self.valid = []
+                    self.picked_piece = None
+
+                else:
+                    self.valid = piece.get_valid_moves(self)
+                    self.picked_piece = piece
+            else:
+                self.go_to(c, r, self.picked_piece)
+                self.valid = []
+
+    def move(self, mouse_pos: tuple[int, int]):
+        global toggle
+        toggle = not toggle
+        if self.get_piece_at(*self.get_piece_at(*mouse_pos)):
+            self.get_piece_at(*self.get_cell(*mouse_pos)).go_to(*self.get_cell(*mouse_pos))
+
+
+# if self.picked_piece.get_valid_moves(self, self):
+#     for c in self.picked_piece.get_valid_moves(self, self):
+#         if cell == c:
+#             self.picked_piece.go_to(*cell)
+#             break\
+
+"""
+Perfect | Oki | Bad | Worst |
+________________________________________________________
+do this | idk | idk | isdrk |
+# yay
+# im done
+# todo: done
+"""
