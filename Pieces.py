@@ -50,10 +50,14 @@ class Piece:
     def get_name(self):
         return self.piece if not self.win else 'W' if self.color else 'w'
 
-    def get_icon(self):
+    @staticmethod
+    def get_piece_icon(name):
         global piece_icons
 
-        return piece_icons[self.get_name()]
+        return piece_icons[name]
+
+    def get_icon(self):
+        return Piece.get_piece_icon(self.get_name())
 
     def get_valid_moves(self, board, c=None, r=None):
         if not c:
@@ -161,10 +165,10 @@ class Piece:
 
 class Pawn(Piece):
     def get_valid_moves(self, board, c=None, r=None, moves_made=None):
+        skip = False
         if moves_made is None:
             skip = False
             moves_made = []
-        skip = False
 
         def move(m):
             nonlocal skip
@@ -282,6 +286,12 @@ class King(Piece):
             h = self.line_movement(1, -1, board, 0, self.color)
 
             o = [a, b, c, d, e, f, g, h]
+
+            with board.get_all_pieces() as get_all:
+                get_all.remove(self)
+                for i in o:
+                    if i in get_all[1]:
+                        o.remove(i)
 
             return list_sum(o)
 

@@ -1,5 +1,3 @@
-import pprint
-
 import Pieces
 
 toggle = False
@@ -7,7 +5,7 @@ toggle = False
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int], screen, pg,
-                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQWBNR"):
+                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
         self.valid = None
         self.picked_piece: Pieces.Piece
         self.picked_piece = None
@@ -24,6 +22,8 @@ class Board:
         self.ch = 0
         self.moves_made: list[tuple] = []
         self.raw_fen = fen
+        self.jail = {True: {}, False: {}}
+        self.won = self.has_won()  # None, white, or black (true or false)
 
     """add fields to store the left x, top y, cell width and cell height
     then implement a method that gets as input the mouse coordinates (every time you click left button)
@@ -68,25 +68,25 @@ class Board:
             rp -= 1
         return {k: state[k] for k in list(reversed(state.keys()))}
 
-    @staticmethod
-    def fromFEN(state: dict, sep='/'):
-        """
-        :param state:
-        :param sep: separator
-        :return: raw FEN
-        """
-        fen = ''
-        s = 0
-        for v in state.values():
-            s = 0
-            for x in v.values():
-                if x is not None:
-                    fen += str(s) if s else ''
-                    fen += x.get_name()
-                else:
-                    s += 1
-            fen += sep if v != 8 else ''
-        return fen
+    # @staticmethod
+    # def fromFEN(state: dict, sep='/'):
+    #     """
+    #     :param state:
+    #     :param sep: separator
+    #     :return: raw FEN
+    #     """
+    #     fen = ''
+    #     s = 0
+    #     for v in state.values():
+    #         s = 0
+    #         for x in v.values():
+    #             if x is not None:
+    #                 fen += str(s) if s else ''
+    #                 fen += x.get_name()
+    #             else:
+    #                 s += 1
+    #         fen += sep if v != 8 else ''
+    #     return fen
 
     def printASCII(self):
         print('\n' * 16)
@@ -103,6 +103,10 @@ class Board:
         board = ' ' + ' '.join(list(board))
         print(board, end='')
         return board
+
+    @staticmethod
+    def get_color_name(color):
+        return 'white' if color else 'black'
 
     def get_piece_at(self, c, r):
         """
@@ -135,9 +139,20 @@ class Board:
         :param piece: this is going to be moved from piece.row/col to c,r
         :return:
         """
+        eaten_piece: Pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
+
+        assert eaten_piece is None or eaten_piece.color != piece.color
+
+        if eaten_piece is not None:
+            jail_for_color = self.jail[eaten_piece.color]
+            count_of_eaten_piece = jail_for_color.get(eaten_piece.get_name(), 0)
+            jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece + 1
+            self.won = self.has_won()
+            print(self.jail)
+
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
-        self.raw_fen = self.fromFEN(self.state)
+        # self.raw_fen = self.fromFEN(self.state)
         piece.go_to(c, r)
         self.turn = not self.turn
 
@@ -191,22 +206,26 @@ class Board:
 
                 real_r = (self.rows - r) + 1
 
-                for f in self.raw_fen:
-                    for i in f:
-                        if 'k' not in i:
-                            f.replace('K', 'W')
-
-                        elif 'K' not in i:
-                            f.replace('k', 'w')
+                # for f in self.raw_fen:
+                #     for i in f:
+                #         if 'k' not in i:
+                #             f.replace('K', 'W')
+                #
+                #         elif 'K' not in i:
+                #             f.replace('k', 'w')
 
                 # self.state = self.readFEN(self.raw_fen)
 
+                get_icon = lambda p: \
+                    Pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, Pieces.King) and \
+                                                                            self.won == p.color else p.get_icon()
+
                 if self.state[real_r][lc] is not None:
-                    icon = self.pg.font.Font('DejaVuSans.ttf', square_size).render(
-                        self.state[real_r][lc].get_icon(), True,
+                    icon = self.pg.font.SysFont('Segoe UI Symbol', square_size - 10).render(
+                        get_icon(self.state[real_r][lc]), True,
                         (255, 255, 255) if self.state[real_r][lc].is_white() else (0, 0, 0))
 
-                    self.screen.blit(icon, (square_size * c, square_size * r))
+                    self.screen.blit(icon, (square_size * c + 3, square_size * r - 8))
 
                 self.moves_made.extend(self.valid if self.valid is not None else [])
 
@@ -252,11 +271,29 @@ class Board:
                 self.go_to(c, r, self.picked_piece)
                 self.valid = []
 
-    def move(self, mouse_pos: tuple[int, int]):
-        global toggle
-        toggle = not toggle
-        if self.get_piece_at(*self.get_piece_at(*mouse_pos)):
-            self.get_piece_at(*self.get_cell(*mouse_pos)).go_to(*self.get_cell(*mouse_pos))
+    def has_won(self):
+        for color, jail in self.jail.items():
+            if 'k' in jail or 'K' in jail:
+                return not color
+        return None
+
+    def get_all_pieces(self, valid=True):
+        re = []
+
+        for i in self.state.values():
+            for x in i.values():
+                re.append(x)
+
+        re_valid = []
+
+        if valid:
+            for p in re:
+                re_valid.extend(p.get_valid_moves(self))
+
+            return re, re_valid
+
+        else:
+            return re
 
 
 # if self.picked_piece.get_valid_moves(self, self):

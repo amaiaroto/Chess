@@ -1,6 +1,20 @@
 # Credits and Attributes
 # credit to rizal2109 on flaticon.com for chess-icon.png
 
+
+""""
+3/7
+
+replace the
+
+
+0) modify the get_valid_moves for the king to remove all positions that are valid moves of some of the opposite color pieces
+1) crown: move the icons (special fonts) to pieces classes. then add a get_icon that depends on state
+2) add test
+3) AI
+
+"""
+
 import keyboard as kb
 import os
 import sys
