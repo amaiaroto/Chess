@@ -1,3 +1,5 @@
+import pprint
+
 import Pieces
 
 toggle = False
@@ -5,7 +7,7 @@ toggle = False
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int], screen, pg,
-                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
+                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQWBNR"):
         self.valid = None
         self.picked_piece: Pieces.Piece
         self.picked_piece = None
@@ -21,6 +23,7 @@ class Board:
         self.cw = 0
         self.ch = 0
         self.moves_made: list[tuple] = []
+        self.raw_fen = fen
 
     """add fields to store the left x, top y, cell width and cell height
     then implement a method that gets as input the mouse coordinates (every time you click left button)
@@ -37,15 +40,16 @@ class Board:
         return chr(96 + index)
 
     @staticmethod
-    def readFEN(fen):
+    def readFEN(fen, sep='/'):
         """
+        :param sep: separator
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
         :return: a {{}} of classes
         """
         # fen = ''.join(list(list(fen).__reversed__())) # flip the board
         state = {}
         rp = 8
-        rows = fen.split('/')
+        rows = fen.split(sep)
         # meta = {'r': BlackRook, 'n': BlackKnight, 'b': BlackBishop, 'q': BlackQueen,
         #         'k', BlackKing, 'p':BlackPawn, 'R': WhiteRook, 'N': WhiteKnight, 'B': WhiteBishop,
         # 'Q': WhiteQueen, 'K': WhiteKing, 'P': WhitePawn}
@@ -63,6 +67,26 @@ class Board:
                     cp += 1
             rp -= 1
         return {k: state[k] for k in list(reversed(state.keys()))}
+
+    @staticmethod
+    def fromFEN(state: dict, sep='/'):
+        """
+        :param state:
+        :param sep: separator
+        :return: raw FEN
+        """
+        fen = ''
+        s = 0
+        for v in state.values():
+            s = 0
+            for x in v.values():
+                if x is not None:
+                    fen += str(s) if s else ''
+                    fen += x.get_name()
+                else:
+                    s += 1
+            fen += sep if v != 8 else ''
+        return fen
 
     def printASCII(self):
         print('\n' * 16)
@@ -113,6 +137,7 @@ class Board:
         """
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
+        self.raw_fen = self.fromFEN(self.state)
         piece.go_to(c, r)
         self.turn = not self.turn
 
@@ -165,6 +190,17 @@ class Board:
                                   self.pg.Rect(x, y, square_size, square_size))
 
                 real_r = (self.rows - r) + 1
+
+                for f in self.raw_fen:
+                    for i in f:
+                        if 'k' not in i:
+                            f.replace('K', 'W')
+
+                        elif 'K' not in i:
+                            f.replace('k', 'w')
+
+                # self.state = self.readFEN(self.raw_fen)
+
                 if self.state[real_r][lc] is not None:
                     icon = self.pg.font.Font('DejaVuSans.ttf', square_size).render(
                         self.state[real_r][lc].get_icon(), True,

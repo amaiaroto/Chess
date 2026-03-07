@@ -7,6 +7,7 @@ piece_icons: dict[str, str] = {
     'B': '♗',
     'N': '♘',
     'P': '♙',
+    'W': '🜲',
 
     'k': '♚',
     'q': '♛',
@@ -14,6 +15,7 @@ piece_icons: dict[str, str] = {
     'b': '♝',
     'n': '♞',
     'p': '♟',
+    'w': '🜲'
 }
 
 
@@ -35,17 +37,18 @@ class PieceError(BaseException):
 
 
 class Piece:
-    def __init__(self, name: str, col: int, row: int):
+    def __init__(self, name: str, col: int, row: int, win=False):
         self.piece: str = name
         self.color: bool = name.isupper()  # uppercase is w
         self.col: int = col
         self.row: int = row
+        self.win = win
 
     def is_white(self):
         return self.color
 
     def get_name(self):
-        return self.piece
+        return self.piece if not self.win else 'W' if self.color else 'w'
 
     def get_icon(self):
         global piece_icons
@@ -87,6 +90,11 @@ class Piece:
             case 'k':
                 return King(name, col, row)
 
+            case 'w':
+                return King(name, col, row, True)
+
+        print(name)
+
         raise PieceError('Not valid piece type')
 
     @staticmethod
@@ -108,6 +116,9 @@ class Piece:
                 return Queen
 
             case 'king' | 'k':
+                return King
+
+            case 'winner' | 'w':
                 return King
 
         raise PieceError('Not valid name')
