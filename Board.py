@@ -15,7 +15,7 @@ class Board:
         self.pg = pg
         self.screen = screen
         self.turn = True
-        self.state = self.readFEN(self, fen)
+        self.state = self.readFEN(fen)
         self.bx = 0
         self.by = 0
         self.cw = 0
@@ -41,9 +41,8 @@ class Board:
         return chr(96 + index)
 
     @staticmethod
-    def readFEN(self, fen, sep='/'):
+    def readFEN(fen, sep='/'):
         """
-        :param self: self
         :param sep: separator
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
         :return: a {{}} of classes
@@ -65,7 +64,7 @@ class Board:
                 if col.isdigit():
                     cp += int(col)
                 else:
-                    current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, cp, rp, self)
+                    current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
         return {k: state[k] for k in list(reversed(state.keys()))}
@@ -92,7 +91,6 @@ class Board:
 
     def printASCII(self):
         print('\n' * 16)
-        print(self.turn)
         board = ""
 
         for r in range(8, 0, -1):
@@ -221,9 +219,8 @@ class Board:
                 # self.state = self.readFEN(self.raw_fen)
 
                 get_icon = lambda p: \
-                    (Pieces.Piece.get_piece_icon('W' if p.color else 'w')) if (isinstance(p, Pieces.King) and
-                                                                               self.won == p.color) else p.get_icon()
-                get_icon = lambda p: p.get_icon()
+                    Pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, Pieces.King) and \
+                                                                            self.won == p.color else p.get_icon()
 
                 if self.state[real_r][lc] is not None:
                     icon = self.pg.font.SysFont('Segoe UI Symbol', square_size - 10).render(
@@ -234,8 +231,8 @@ class Board:
 
                 self.moves_made.extend(self.valid if self.valid is not None else [])
 
-                if self.picked_piece is not None and self.picked_piece.moves:
-                    for p in self.picked_piece.moves:
+                if self.valid:
+                    for p in self.valid:
                         center = self.get_cell_center(*p)
                         self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
 
@@ -246,38 +243,35 @@ class Board:
     def handle_click(self, x, y):
         c, r = self.get_cell(x, y)
         piece: Pieces.Piece = self.get_piece_at(c, r)
-        print(piece)
-        try:
-            has_valid_moves = self.picked_piece.moves and len(self.picked_piece.moves)
+        has_valid_moves = self.valid is not None and len(self.valid) > 0
 
-        except AttributeError:
-            has_valid_moves = False
-        print(has_valid_moves)
         if piece is None and not has_valid_moves:
             pass
 
         elif piece is None and has_valid_moves:
-            if (c, r) in self.picked_piece.moves:
+            if (c, r) in self.valid:
                 self.go_to(c, r, self.picked_piece)
-            self.picked_piece.moves = set()
+            self.valid = []
             self.picked_piece = None
 
         elif piece is not None and not has_valid_moves:
+            self.valid = piece.get_valid_moves(self)
             self.picked_piece = piece
-            self.picked_piece.get_valid_moves(self)
 
         else:
-            if (c, r) not in self.picked_piece.moves:
+            # Yes & Yes
+
+            if (c, r) not in self.valid:
                 if piece == self.picked_piece:
-                    self.picked_piece.moves = set()
+                    self.valid = []
                     self.picked_piece = None
 
                 else:
-                    self.picked_piece.moves = piece.get_valid_moves(self)
+                    self.valid = piece.get_valid_moves(self)
                     self.picked_piece = piece
             else:
                 self.go_to(c, r, self.picked_piece)
-                self.picked_piece.moves = set()
+                self.valid = []
 
     def has_won(self):
         for color, jail in self.jail.items():
@@ -286,10 +280,8 @@ class Board:
         return None
 
     def get_pieces(self):
-        re: dict = {True: set(), False: set()}
+        re = {True: set(), False: set()}
         x: Pieces.Piece
-
-        print(self.state)
 
         for i in self.state.values():
             for x in i.values():
@@ -297,12 +289,3 @@ class Board:
                     re[x.color].add(x)
 
         return re
-
-    def get_king(self, color: bool):
-        all_pieces = self.get_pieces()[color]
-
-        for i in all_pieces:
-            if type(i) == Pieces.King:
-                return i
-
-        raise Pieces.PieceError('No king found')
