@@ -1,1 +1,16 @@
 chess board random pos with gray circles marking the piece that you clicked's legal movesB\\\\\\\\\\\\\
+
+TODOs:
+ # 1. Filtering valid moves to check if it puts king in danger
+        # 1.1: filter the valid moves of the king by removing those that are directly threatened by one of the opponent's pieces
+        # 1.2: filter the valid moves of the non-king pieces by removing those that allow a piece of the opponent to threaten the king
+        # 2. Check for STALEMATE & CHECKMATE, INSUFFICIENT MATERIAL, 50-MOVE, THREEFOLD REPETITION
+        # 3. Bot
+        # 4. Castling King-Side & Queen-Side
+        # 5. En passant
+        # 6. tests
+        # 7. add turn indicator
+        # 8. add counts of taken pieces
+
+3/21
+       take care of 1.2

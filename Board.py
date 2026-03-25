@@ -1,4 +1,6 @@
 import Pieces
+import Undo
+from Pieces import King
 
 toggle = False
 
@@ -25,6 +27,7 @@ class Board:
         self.jail = {True: {}, False: {}}
         self.won = self.has_won()  # None, white, or black (true or false)
         self.pieces = self.get_pieces()
+        self.history: list[Undo.UndoMove] = []
 
     """add fields to store the left x, top y, cell width and cell height
     then implement a method that gets as input the mouse coordinates (every time you click left button)
@@ -133,9 +136,10 @@ class Board:
         # return self.state[list(self.state.keys())[(x - self.bx) // self.cw]][
         #     {k: v for k, v in self.state.items()}[alphabet_real[(y - self.by) // self.ch]]]
 
-    def go_to(self, c, r, piece):
+    def go_to(self, c, r, piece, a=True):
         """
         :param c:
+        :param a:
         :param r:
         :param piece: this is going to be moved from piece.row/col to c,r
         :return:
@@ -152,11 +156,20 @@ class Board:
             # remove piece from self.pieces set for the color of piece
             print(self.jail)
 
-        self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
+        if a:
+            move_info = Undo.UndoMove(self, piece, eaten_piece)
+            self.history.append(move_info)
+
+        if piece is not None: self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
+
         self.state[r][Board.get_letter_from_index(c)] = piece
         # self.raw_fen = self.fromFEN(self.state)
-        piece.go_to(c, r)
+
+        if piece is not None: piece.go_to(c, r)
+
         self.turn = not self.turn
+
+        return None
 
     def get_cell(self, x, y):
         """
@@ -231,7 +244,7 @@ class Board:
 
                 self.moves_made.extend(self.valid if self.valid is not None else [])
 
-                if self.valid:
+                if self.valid is not None and len(self.valid) > 0:
                     for p in self.valid:
                         center = self.get_cell_center(*p)
                         self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
@@ -289,3 +302,41 @@ class Board:
                     re[x.color].add(x)
 
         return re
+
+    def get_king(self, color) -> King | None:
+        color_pieces = self.get_pieces()[color]
+        for p in color_pieces:
+            if isinstance(p, Pieces.King):
+                return p
+        return None
+
+    # def get_danger_squares(self, color):
+    #     p: Pieces.Piece
+    #     re = set()
+    #     opp_pieces = self.get_pieces()[color]
+    #
+    #     for p in opp_pieces:
+    #         for m in p.get_valid_moves(self, no_turn=True, c=True):
+    #             re.add(m)
+    #
+    #     return re
+
+    def filter_moves_if_opponent_can_reach(self, valid_moves, piece: Pieces.Piece):
+        # todo: for every valid move V of this piece
+        #  try to move in that location
+        #  for every opponent piece
+        #  get valid moves of opponent piece and if it intersects with our king pos then remove V, break
+        if valid_moves is not None and piece is not None:
+            for move in valid_moves:
+                self.go_to(*move, piece)
+                opp_pieces = self.get_pieces()[not piece.color]
+                op: Pieces.Piece
+                for op in opp_pieces:
+                    if op.get_valid_moves(self, no_turn=True, _filter=False) == self.get_king(piece.color).get_pos():
+                        self.history[len(self.history) - 1].undo(self)
+                        break
+        pass
+
+    def modify_pos(self, c, r, piece):
+        self.state[r][self.get_letter_from_index(c)] = piece
+        return self.state

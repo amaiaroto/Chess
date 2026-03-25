@@ -17,14 +17,21 @@ piece_icons: dict[str, str] = {
 }
 
 
-def list_sum(l):
-    r = []
+def flatten(*i) -> set:
+    r = set()
 
-    for i in l:
-        r.extend(i)
+    for it in i:
+        if it is not None:
+            try:
+                it.__iter__()
+                if type(it) != tuple:
+                    r.update(flatten(*it))
+                else:
+                    r.add(it)
+            except AttributeError:
+                r.add(it)
 
     return r
-
 
 class PieceError(BaseException):
     def __init__(self, name: str):
@@ -57,19 +64,23 @@ class Piece:
     def get_icon(self):
         return Piece.get_piece_icon(self.get_name())
 
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
-        if not c:
-            c = self.col
-        if not r:
-            r = self.row
-
+    def get_valid_moves(self, board, no_turn=False, _filter=True) -> set:
         ...
 
-    def go_to(self, c, r):
+    def go_to(self, c: int, r: int):
+        try:
+            assert 0 < c < 9 and 0 < r < 9
+
+        except AssertionError:
+            return self.col, self.row
+
         self.col = c
         self.row = r
 
         return self.col, self.row
+
+    def _return(self):
+        pass
 
     @staticmethod
     def create_piece(name: str, col, row):
@@ -136,7 +147,7 @@ class Piece:
         """
         c = self.col
         r = self.row
-        valid_moves = []
+        valid_moves = set()
 
         for n in range(max(board.columns, board.columns)):
             c += dc
@@ -146,10 +157,10 @@ class Piece:
                 break
 
             if board.get_piece_at(c, r) is None:
-                valid_moves.append((c, r))
+                valid_moves.add((c, r))
 
             elif board.get_piece_at(c, r).color != color:
-                valid_moves.append((c, r))
+                valid_moves.add((c, r))
                 break
 
             else:
@@ -160,29 +171,26 @@ class Piece:
 
         return valid_moves
 
+    def get_pos(self):
+        return self.col, self.row
+
 
 class Pawn(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False, moves_made=None):
-        skip = False
-        if moves_made is None:
-            skip = False
-            moves_made = []
-
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
         def move(m):
-            nonlocal skip
-
+            skip = False
             # attack / capture
             if board.get_piece_at(self.col + 1, self.row + m) is not None and \
                     board.get_piece_at(self.col + 1, self.row + m).color != self.color:
-                valid_moves.append((self.col + 1, self.row + m))
+                valid_moves.add((self.col + 1, self.row + m))
 
             if board.get_piece_at(self.col - 1, self.row + m) is not None and \
                     board.get_piece_at(self.col - 1, self.row + m).color != self.color:
-                valid_moves.append((self.col - 1, self.row + m))
+                valid_moves.add((self.col - 1, self.row + m))
 
             # normal
             if board.get_piece_at(self.col, self.row + m) is None:
-                valid_moves.append((self.col, self.row + m))
+                valid_moves.add((self.col, self.row + m))
 
             else:
                 skip = True
@@ -191,66 +199,64 @@ class Pawn(Piece):
             if ((m > 0 and self.row == 2) or (m < 0 and self.row == board.rows - 1)
                 and board.get_piece_at(self.col, self.row + (m * 2)) is None) and not skip and board.get_piece_at(
                 self.col, self.row + (m * 2)) is None:
-                valid_moves.append((self.col, self.row + (m * 2)))
+                valid_moves.add((self.col, self.row + (m * 2)))
 
-        valid_moves: list[tuple] = []
+        valid_moves: set = set()
 
         if self.color == board.turn or no_turn:
             move(1 if self.color else -1)
+        if _filter:
+            board.filter_moves_if_opponent_can_reach(valid_moves, board.get_king(self.color))
 
         return valid_moves
 
 
 class Rook(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             a = self.line_movement(1, 0, board, 8, self.color)
             b = self.line_movement(-1, 0, board, 8, self.color)
             c = self.line_movement(0, 1, board, 8, self.color)
             d = self.line_movement(0, -1, board, 8, self.color)
 
-            o = [a, b, c, d]
+            return flatten(a, b, c, d)
 
-            return list_sum(o)
-
-        return []
+        return None
 
 
 class Knight(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
-        valid_moves: list[tuple] = []
-        moves = {0: (self.col + 2, self.row + 1), 1: (self.col + 2, self.row - 1), 2: (self.col + 1, self.row + 2),
-                 3: (self.col - 1, self.row + 2), 4: (self.col + 1, self.row - 2), 5: (self.col - 2, self.row - 1),
-                 6: (self.col - 2, self.row + 1), 7: (self.col - 1, self.row - 2)}
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
+        valid_moves: set = set()
+        moves = [(self.col + 2, self.row + 1), (self.col + 2, self.row - 1), (self.col + 1, self.row + 2),
+                 (self.col - 1, self.row + 2), (self.col + 1, self.row - 2), (self.col - 2, self.row - 1),
+                 (self.col - 2, self.row + 1), (self.col - 1, self.row - 2)]
 
-        for p in range(len(moves)):
-            if board.is_valid_cell(*moves[p]) and self.color == board.turn:
-                if board.get_piece_at(*moves[p]) is not None:
-                    if board.get_piece_at(*moves[p]).color != self.color:
-                        valid_moves.append(moves[p])
+        for move in moves:
+            if board.is_valid_cell(*move) and self.color == board.turn:
+                if board.get_piece_at(*move) is not None:
+                    if board.get_piece_at(*move).color != self.color:
+                        valid_moves.add(move)
                 else:
-                    valid_moves.append(moves[p])
+                    valid_moves.add(move)
 
         return valid_moves
 
 
 class Bishop(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             a = self.line_movement(-1, 1, board, 8, self.color)
             b = self.line_movement(1, -1, board, 8, self.color)
             c = self.line_movement(1, 1, board, 8, self.color)
             d = self.line_movement(-1, -1, board, 8, self.color)
 
-            o = [a, b, c, d]
+            return flatten(a, b, c, d)
 
-            return list_sum(o)
-
-        return []
+        return None
 
 
 class Queen(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             # - & |
             a = self.line_movement(1, 0, board, 8, self.color)
@@ -264,16 +270,16 @@ class Queen(Piece):
             g = self.line_movement(1, 1, board, 8, self.color)
             h = self.line_movement(-1, -1, board, 8, self.color)
 
-            o = [a, b, c, d, e, f, g, h]
+            return flatten(a, b, c, d, e, f, g, h)
 
-            return list_sum(o)
-
-        return []
+        return None
 
 
 MoveError = PieceError
+
+
 class King(Piece):
-    def get_valid_moves(self, board, c=None, r=None, no_turn=False):
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
         global MoveError
 
         if self.color == board.turn or no_turn:
@@ -286,14 +292,14 @@ class King(Piece):
             g = self.line_movement(0, -1, board, 0, self.color)
             h = self.line_movement(1, -1, board, 0, self.color)
 
-            o = set(list_sum([a, b, c, d, e, f, g, h]))
+            o = flatten(a, b, c, d, e, f, g, h)
 
             opp_pieces = board.pieces[not self.color]
-
-            for p in opp_pieces:
-                if type(p) != King:
-                    o.difference_update(p.get_valid_moves(board, no_turn=True))
+            if _filter:
+                for p in opp_pieces:
+                    if type(p) != King:
+                        o.difference_update(p.get_valid_moves(board, no_turn=True, _filter=False))
 
             return o
 
-        return []
+        return None
