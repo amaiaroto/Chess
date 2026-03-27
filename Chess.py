@@ -1,25 +1,9 @@
-# Credits and Attributes
-# credit to rizal2109 on flaticon.com for chess-icon.png
-
-
-""""
-3/7
-
-replace the
-
-
-0) modify the get_valid_moves for the king to remove all positions that are valid moves of some of the opposite color pieces
-1) crown: move the icons (special fonts) to pieces classes. then add a get_icon that depends on state
-2) add test
-3) AI
-
-"""
-
 import keyboard as kb
 import os
 import sys
-from contextlib import redirect_stdout
+import ChessTest
 
+from contextlib import redirect_stdout
 from Board import Board
 
 bg_color = (183, 255, 183)
@@ -68,7 +52,7 @@ class Button:
         return self.rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]
 
     @staticmethod
-    def parse(text: str, hint: str | list = '[]'):
+    def parse(text: str, hint: str | list = '[]') -> str:
         result = ''
         co = False
 
@@ -92,6 +76,7 @@ class Button:
 
 
 fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+
 board = Board((8, 8), screen, pg, fen)
 
 
@@ -101,7 +86,7 @@ def exit_chess(code: int | str = 0):
     sys.exit(code)
 
 
-def start_chess():
+def start_chess() -> bool:
     global title_screen
 
     title_screen = False

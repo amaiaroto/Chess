@@ -1,6 +1,5 @@
 import Pieces
 import Undo
-from Pieces import King
 
 toggle = False
 
@@ -40,23 +39,21 @@ class Board:
     """
 
     @staticmethod
-    def get_letter_from_index(index):
+    def get_letter_from_index(index) -> str:
         return chr(96 + index)
 
     @staticmethod
-    def readFEN(fen, sep='/'):
+    def readFEN(fen, sep='/') -> dict:
         """
         :param sep: separator
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
         :return: a {{}} of classes
         """
-        # fen = ''.join(list(list(fen).__reversed__())) # flip the board
+
         state = {}
         rp = 8
         rows = fen.split(sep)
-        # meta = {'r': BlackRook, 'n': BlackKnight, 'b': BlackBishop, 'q': BlackQueen,
-        #         'k', BlackKing, 'p':BlackPawn, 'R': WhiteRook, 'N': WhiteKnight, 'B': WhiteBishop,
-        # 'Q': WhiteQueen, 'K': WhiteKing, 'P': WhitePawn}
+
         for row in rows:
             cp = 1
             for col in row:
@@ -72,27 +69,7 @@ class Board:
             rp -= 1
         return {k: state[k] for k in list(reversed(state.keys()))}
 
-    # @staticmethod
-    # def fromFEN(state: dict, sep='/'):
-    #     """
-    #     :param state:
-    #     :param sep: separator
-    #     :return: raw FEN
-    #     """
-    #     fen = ''
-    #     s = 0
-    #     for v in state.values():
-    #         s = 0
-    #         for x in v.values():
-    #             if x is not None:
-    #                 fen += str(s) if s else ''
-    #                 fen += x.get_name()
-    #             else:
-    #                 s += 1
-    #         fen += sep if v != 8 else ''
-    #     return fen
-
-    def printASCII(self):
+    def printASCII(self) -> str:
         print('\n' * 16)
         board = ""
 
@@ -109,7 +86,7 @@ class Board:
         return board
 
     @staticmethod
-    def get_color_name(color):
+    def get_color_name(color) -> str:
         return 'white' if color else 'black'
 
     def get_piece_at(self, c, r):
@@ -136,57 +113,78 @@ class Board:
         # return self.state[list(self.state.keys())[(x - self.bx) // self.cw]][
         #     {k: v for k, v in self.state.items()}[alphabet_real[(y - self.by) // self.ch]]]
 
-    def go_to(self, c, r, piece, a=True):
+    def modify_pos(self, c, r, piece) -> dict:
+        self.state[r][self.get_letter_from_index(c)] = piece
+        return self.state
+
+    def undo_go_to(self, move_info: Undo.UndoMove):
+        move_info.sp.go_to(*move_info.sp_pos)
+        r, c = move_info.sp_pos
+        piece = move_info.sp
+
+        self.state[r][self.get_letter_from_index(c)] = piece
+        eaten_piece = move_info.piece_at_target
+        self.state[move_info.pos_of_piece_at_target[0]][
+            Board.get_letter_from_index(move_info.pos_of_piece_at_target[1])] = eaten_piece
+
+        if not move_info.lw:
+            if eaten_piece is not None:
+                jail_for_color = self.jail[eaten_piece.color]
+                assert eaten_piece.get_name() in jail_for_color
+                count_of_eaten_piece = jail_for_color[eaten_piece.get_name()]
+                jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece - 1
+                self.won = self.has_won()
+
+    def go_to(self, c, r, piece, lw=False) -> Undo.UndoMove:
         """
-        :param c:
-        :param a:
-        :param r:
-        :param piece: this is going to be moved from piece.row/col to c,r
+        :param c: c
+        :param r: r
+        :param lw: lightweight
+        :param piece: this piece is going to be moved from piece.row/col to c,r
         :return:
         """
+
         eaten_piece: Pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
 
         assert eaten_piece is None or eaten_piece.color != piece.color
+        assert piece is not None
 
-        if eaten_piece is not None:
-            jail_for_color = self.jail[eaten_piece.color]
-            count_of_eaten_piece = jail_for_color.get(eaten_piece.get_name(), 0)
-            jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece + 1
-            self.won = self.has_won()
-            # remove piece from self.pieces set for the color of piece
-            print(self.jail)
-
-        if a:
-            move_info = Undo.UndoMove(self, piece, eaten_piece)
-            self.history.append(move_info)
-
-        if piece is not None: self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
-
+        move_info = Undo.UndoMove(self, piece, (r, c), lw)
+        self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
-        # self.raw_fen = self.fromFEN(self.state)
 
-        if piece is not None: piece.go_to(c, r)
+        if not lw:
+            if eaten_piece is not None:
+                jail_for_color = self.jail[eaten_piece.color]
+                count_of_eaten_piece = jail_for_color.get(eaten_piece.get_name(), 0)
+                jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece + 1
+                self.won = self.has_won()
 
-        self.turn = not self.turn
+            # self.history.append(move_info)
 
-        return None
+            piece.go_to(c, r)
 
-    def get_cell(self, x, y):
+            self.turn = not self.turn
+
+        return move_info
+
+    def get_cell(self, x, y) -> tuple:
         """
         :param x: point x
         :param y: point y
         :return: cell location on board
         """
         c, r = (x - self.bx) // self.cw + 1, self.rows - (y - self.by) // self.ch
+
         return c, r
 
-    def get_cell_center(self, c, r):
+    def get_cell_center(self, c, r) -> tuple:
         return (c - 1) * self.cw + self.cw // 2 + self.bx, (self.rows - r) * self.ch + self.ch // 2 + self.by
 
-    def is_valid_cell(self, c, r):
+    def is_valid_cell(self, c, r) -> bool:
         return 0 < c <= self.columns and 0 < r <= self.rows
 
-    def flag_valid_moves(self, x: int, y: int):
+    def flag_valid_moves(self, x: int, y: int) -> set | None:
         """
         :param x: mouse click position
         :param y:
@@ -220,17 +218,6 @@ class Board:
                                   self.pg.Rect(x, y, square_size, square_size))
 
                 real_r = (self.rows - r) + 1
-
-                # for f in self.raw_fen:
-                #     for i in f:
-                #         if 'k' not in i:
-                #             f.replace('K', 'W')
-                #
-                #         elif 'K' not in i:
-                #             f.replace('k', 'w')
-
-                # self.state = self.readFEN(self.raw_fen)
-
                 get_icon = lambda p: \
                     Pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, Pieces.King) and \
                                                                             self.won == p.color else p.get_icon()
@@ -249,10 +236,6 @@ class Board:
                         center = self.get_cell_center(*p)
                         self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
 
-        # if self.moves is not None:
-        #     for move in self.moves:
-        #         draw circle at move
-
     def handle_click(self, x, y):
         c, r = self.get_cell(x, y)
         piece: Pieces.Piece = self.get_piece_at(c, r)
@@ -264,6 +247,7 @@ class Board:
         elif piece is None and has_valid_moves:
             if (c, r) in self.valid:
                 self.go_to(c, r, self.picked_piece)
+
             self.valid = []
             self.picked_piece = None
 
@@ -272,8 +256,6 @@ class Board:
             self.picked_piece = piece
 
         else:
-            # Yes & Yes
-
             if (c, r) not in self.valid:
                 if piece == self.picked_piece:
                     self.valid = []
@@ -286,13 +268,14 @@ class Board:
                 self.go_to(c, r, self.picked_piece)
                 self.valid = []
 
-    def has_won(self):
+    def has_won(self) -> bool | None:
         for color, jail in self.jail.items():
             if 'k' in jail or 'K' in jail:
                 return not color
+
         return None
 
-    def get_pieces(self):
+    def get_pieces(self) -> dict[bool, set]:
         re = {True: set(), False: set()}
         x: Pieces.Piece
 
@@ -303,40 +286,32 @@ class Board:
 
         return re
 
-    def get_king(self, color) -> King | None:
+    def get_king(self, color) -> Pieces.King | None:
         color_pieces = self.get_pieces()[color]
+
         for p in color_pieces:
             if isinstance(p, Pieces.King):
                 return p
+
         return None
 
-    # def get_danger_squares(self, color):
-    #     p: Pieces.Piece
-    #     re = set()
-    #     opp_pieces = self.get_pieces()[color]
-    #
-    #     for p in opp_pieces:
-    #         for m in p.get_valid_moves(self, no_turn=True, c=True):
-    #             re.add(m)
-    #
-    #     return re
+    def filter_moves_if_opponent_can_reach(self, valid_moves: set | None, piece: Pieces.Piece):
+        assert piece is not None
 
-    def filter_moves_if_opponent_can_reach(self, valid_moves, piece: Pieces.Piece):
-        # todo: for every valid move V of this piece
-        #  try to move in that location
-        #  for every opponent piece
-        #  get valid moves of opponent piece and if it intersects with our king pos then remove V, break
-        if valid_moves is not None and piece is not None:
-            for move in valid_moves:
-                self.go_to(*move, piece)
-                opp_pieces = self.get_pieces()[not piece.color]
-                op: Pieces.Piece
+        vm = valid_moves
+
+        if valid_moves is not None:
+            opp_pieces = self.get_pieces()[not piece.color]
+
+            for move in vm:
+                undo = self.go_to(*move, piece, lw=True)
+
                 for op in opp_pieces:
-                    if op.get_valid_moves(self, no_turn=True, _filter=False) == self.get_king(piece.color).get_pos():
-                        self.history[len(self.history) - 1].undo(self)
-                        break
-        pass
+                    op_vm = op.get_valid_moves(self, no_turn=True, _filter=False)
 
-    def modify_pos(self, c, r, piece):
-        self.state[r][self.get_letter_from_index(c)] = piece
-        return self.state
+                    if op_vm is not None and self.get_king(piece.color).get_pos() in op_vm:
+                        # valid_moves.remove(move)
+
+                        break
+
+                self.undo_go_to(undo)
