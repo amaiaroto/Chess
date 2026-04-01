@@ -67,7 +67,7 @@ class Board:
                     current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
-        return {k: state[k] for k in list(reversed(state.keys()))}
+        return state
 
     def printASCII(self) -> str:
         print('\n' * 16)
