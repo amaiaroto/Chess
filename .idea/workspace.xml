@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="fixedd">
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="vfixedd">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.noai" beforeDir="false" afterPath="$PROJECT_DIR$/.noai" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Chess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessTest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Undo.py" beforeDir="false" afterPath="$PROJECT_DIR$/Undo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,30 +64,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python tests.Python tests for ChessTest.TestMoves.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Board.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Chess (1).executor&quot;: &quot;Debug&quot;,
-    &quot;Python.Chess.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/asher/PycharmProjects/Chess&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;memory.settings&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
+    "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
+    "Python.Board.executor": "Run",
+    "Python.Chess (1).executor": "Debug",
+    "Python.Chess.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.scratch.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/asher/PycharmProjects/Chess",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "memory.settings"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
@@ -180,9 +180,25 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for ChessTest.TestMoves.test_fen" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="Chess" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;ChessTest.TestMoves.test_fen&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Python tests for ChessTest.TestMoves" />
+        <item itemvalue="Python tests.Python tests for ChessTest.TestMoves.test_fen" />
         <item itemvalue="Python.Chess (1)" />
         <item itemvalue="Python.Board" />
       </list>
@@ -331,7 +347,151 @@
       <option name="project" value="LOCAL" />
       <updated>1774401163626</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="vfixedd">
+      <option name="closed" value="true" />
+      <created>1774574000673</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1774574000673</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002821482</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002821482</updated>
+    </task>
+    <task id="LOCAL-00019" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002831460</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002831460</updated>
+    </task>
+    <task id="LOCAL-00020" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002839275</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002839275</updated>
+    </task>
+    <task id="LOCAL-00021" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002844253</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002844253</updated>
+    </task>
+    <task id="LOCAL-00022" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002850164</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002850164</updated>
+    </task>
+    <task id="LOCAL-00023" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002862820</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002862820</updated>
+    </task>
+    <task id="LOCAL-00024" summary="fix filtering moves">
+      <option name="closed" value="true" />
+      <created>1775002891337</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1775002891337</updated>
+    </task>
+    <task id="LOCAL-00025" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003017335</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003017335</updated>
+    </task>
+    <task id="LOCAL-00026" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003025785</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003025785</updated>
+    </task>
+    <task id="LOCAL-00027" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003039854</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003039854</updated>
+    </task>
+    <task id="LOCAL-00028" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003056890</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003056890</updated>
+    </task>
+    <task id="LOCAL-00029" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003074219</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003074219</updated>
+    </task>
+    <task id="LOCAL-00030" summary="unflipping state">
+      <option name="closed" value="true" />
+      <created>1775003101871</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003101871</updated>
+    </task>
+    <task id="LOCAL-00031" summary="adding readState">
+      <option name="closed" value="true" />
+      <created>1775003118761</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003118761</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Improving tests">
+      <option name="closed" value="true" />
+      <created>1775003143677</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003143677</updated>
+    </task>
+    <task id="LOCAL-00033" summary="i forgot">
+      <option name="closed" value="true" />
+      <created>1775003154830</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003154830</updated>
+    </task>
+    <task id="LOCAL-00034" summary="nothing (fr)">
+      <option name="closed" value="true" />
+      <created>1775003179494</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1775003179494</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -354,7 +514,14 @@
     <MESSAGE value="Update Chess.pey" />
     <MESSAGE value="fixed" />
     <MESSAGE value="fixedd" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixedd" />
+    <MESSAGE value="vfixedd" />
+    <MESSAGE value="fix filtering moves" />
+    <MESSAGE value="unflipping state" />
+    <MESSAGE value="adding readState" />
+    <MESSAGE value="Improving tests" />
+    <MESSAGE value="i forgot" />
+    <MESSAGE value="nothing (fr)" />
+    <option name="LAST_COMMIT_MESSAGE" value="nothing (fr)" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -368,6 +535,9 @@
       </default-breakpoints>
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="tests">
+        <watch expression="self" language="Python" />
+      </configuration>
       <configuration name="PythonConfigurationType">
         <watch expression="self.picked_piece.moves" />
         <watch expression="piece.moves" />
