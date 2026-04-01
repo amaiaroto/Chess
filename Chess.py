@@ -1,7 +1,6 @@
 import keyboard as kb
 import os
 import sys
-import ChessTest
 
 from contextlib import redirect_stdout
 from Board import Board
