@@ -2,8 +2,12 @@ import keyboard as kb
 import os
 import sys
 
+print('Imports:')
+
 from contextlib import redirect_stdout
 from Board import Board
+
+print('Board: OK')
 
 bg_color = (183, 255, 183)
 title_screen = True
@@ -11,7 +15,11 @@ title_screen = True
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
 
+print('Pygame: OK')
+
 from Screen import Screen
+
+print('Screen: OK')
 
 pg.init()
 pg.mixer.init()
