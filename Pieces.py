@@ -208,6 +208,7 @@ class Pawn(Piece):
             move(1 if self.color else -1)
 
         if _filter:
+            print(board.exportFEN())
             board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
 
         return valid_moves

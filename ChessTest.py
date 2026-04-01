@@ -2,7 +2,7 @@ import unittest
 import Board
 
 
-class TestMoves(unittest.TestCase):
+class ChessTest(unittest.TestCase):
     def test_valid_moves_filter(self):
         board = Board.Board((8, 8), None, None, fen='k7/7P/3b4/8/4K3/8/8/8')
 
@@ -20,6 +20,16 @@ class TestMoves(unittest.TestCase):
         f = 'k7/7P/3b4/8/4K3/8/8/8'
         board = Board.Board((8, 8), None, None, fen=f)
         self.assertEqual(f, board.exportFEN())
+
+    def test_glitches(self):
+        f = Board.Board.starting_position()
+        board = Board.Board((8, 8), None, None, fen=f)
+
+        fen1 = board.exportFEN()
+        board.get_piece_at(5, 2).get_valid_moves(board)
+        fen2 = board.exportFEN()
+
+        self.assertEqual(fen1, fen2)
 
 
 if __name__ == '__main__':
