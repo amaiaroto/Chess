@@ -1,0 +1,5 @@
+def slow_print(_str: str, _delay, _time):
+    for c in _str:
+        _time.sleep(_delay)
+        print(c, end='')
+    print('\n')
