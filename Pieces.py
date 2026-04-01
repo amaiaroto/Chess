@@ -206,7 +206,7 @@ class Pawn(Piece):
         if self.color == board.turn or no_turn:
             move(1 if self.color else -1)
         if _filter:
-            board.filter_moves_if_opponent_can_reach(valid_moves, board.get_king(self.color))
+            board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
 
         return valid_moves
 

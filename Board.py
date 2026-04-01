@@ -295,23 +295,25 @@ class Board:
 
         return None
 
-    def filter_moves_if_opponent_can_reach(self, valid_moves: set | None, piece: Pieces.Piece):
+    def filter_moves_if_opponent_can_reach(self, piece: Pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
         assert piece is not None
 
-        vm = valid_moves
+        vm = set()
 
         if valid_moves is not None:
             opp_pieces = self.get_pieces()[not piece.color]
 
-            for move in vm:
+            for move in valid_moves:
                 undo = self.go_to(*move, piece, lw=True)
 
                 for op in opp_pieces:
                     op_vm = op.get_valid_moves(self, no_turn=True, _filter=False)
 
-                    if op_vm is not None and self.get_king(piece.color).get_pos() in op_vm:
-                        # valid_moves.remove(move)
+                    if op_vm is not None and pos in op_vm:
+                        vm.add(move)
 
                         break
 
                 self.undo_go_to(undo)
+
+            valid_moves.difference_update(vm)
