@@ -33,6 +33,7 @@ def flatten(*i) -> set:
 
     return r
 
+
 class PieceError(BaseException):
     def __init__(self, name: str):
         self.error: str = name
@@ -171,7 +172,7 @@ class Piece:
 
         return valid_moves
 
-    def get_pos(self):
+    def get_pos(self) -> tuple[int, int]:
         return self.col, self.row
 
 
@@ -205,6 +206,7 @@ class Pawn(Piece):
 
         if self.color == board.turn or no_turn:
             move(1 if self.color else -1)
+
         if _filter:
             board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
 

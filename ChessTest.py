@@ -1,6 +1,6 @@
 import unittest
 
-n = 0
+
 class TestMoves(unittest.TestCase):
     def test_moves(self, result):
         assert result == set()

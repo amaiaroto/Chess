@@ -89,7 +89,7 @@ class Board:
     def get_color_name(color) -> str:
         return 'white' if color else 'black'
 
-    def get_piece_at(self, c, r):
+    def get_piece_at(self, c, r) -> Pieces.Piece | None:
         """
 
         :param c: 1 based
