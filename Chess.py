@@ -19,7 +19,7 @@ print('Pygame: OK')
 
 from Screen import Screen
 
-print('Screen: OK')
+print('Screen: OK\n\nOK')
 
 pg.init()
 pg.mixer.init()
