@@ -85,6 +85,31 @@ class Board:
         print(board, end='')
         return board
 
+    def exportFEN(self) -> str:
+        fen = ""
+        for r in range(8, 0, -1):
+            num = 0
+            ar = ""
+            for c in range(1, 9):
+                lc = Board.get_letter_from_index(c)
+
+                if self.state[r][lc] is not None:
+                    if num != 0:
+                        ar += str(num)
+
+                    ar += self.state[r][lc].get_name()
+                    num = 0
+
+                else:
+                    num += 1
+
+            if num != 0:
+                ar += str(num)
+
+            fen += ar + '/'
+
+        return fen[:-1]
+
     @staticmethod
     def get_color_name(color) -> str:
         return 'white' if color else 'black'
