@@ -342,3 +342,7 @@ class Board:
                 self.undo_go_to(undo)
 
             valid_moves.difference_update(vm)
+
+    @staticmethod
+    def starting_position():
+        return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'

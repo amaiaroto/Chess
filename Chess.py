@@ -82,7 +82,7 @@ class Button:
         return result
 
 
-fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+fen = Board.starting_position()
 
 board = Board((8, 8), screen, pg, fen)
 
