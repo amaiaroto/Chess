@@ -329,6 +329,7 @@ class Board:
             opp_pieces = self.get_pieces()[not piece.color]
 
             for move in valid_moves:
+                # todo: fix flipped C&R somewhere
                 undo = self.go_to(*move, piece, lw=True)
 
                 for op in opp_pieces:

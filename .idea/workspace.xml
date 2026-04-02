@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="eh">
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="ok ok ok!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pieces.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pieces.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +67,7 @@
   "keyToString": {
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Run",
+    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Debug",
     "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
     "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
     "Python tests.Python tests in ChessTest.py.executor": "Debug",
@@ -549,7 +549,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775004027766</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="ok ok ok!">
+      <option name="closed" value="true" />
+      <created>1775005920972</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1775005920972</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -583,17 +591,14 @@
     <MESSAGE value="..." />
     <MESSAGE value="eh" />
     <MESSAGE value="saving ''s" />
-    <option name="LAST_COMMIT_MESSAGE" value="saving ''s" />
+    <MESSAGE value="ok ok ok!" />
+    <option name="LAST_COMMIT_MESSAGE" value="ok ok ok!" />
+    <option name="LAST_CHUNK_COMMIT_MESSAGE" value="ok ok ok!" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ChessTest.py</url>
-          <line>28</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Pieces.py</url>
           <line>209</line>
@@ -601,8 +606,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Pieces.py</url>
-          <line>213</line>
+          <line>214</line>
           <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Board.py</url>
+          <line>332</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ChessTest.py</url>
+          <line>28</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -617,6 +632,8 @@
       <configuration name="tests">
         <watch expression="self" language="Python" />
         <watch expression="board.exportFEN()" language="Python" />
+        <watch expression="self.exportFEN()" language="Python" />
+        <watch expression="self.state" language="Python" />
       </configuration>
       <configuration name="PythonConfigurationType">
         <watch expression="self.picked_piece.moves" />
