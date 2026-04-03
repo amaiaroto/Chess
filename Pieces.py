@@ -178,7 +178,10 @@ class Piece:
 
 class Pawn(Piece):
     def get_valid_moves(self, board, no_turn=False, _filter=True):
+        valid_moves: set = set()
+
         def move(m):
+            nonlocal valid_moves
             skip = False
             # attack / capture
             if board.get_piece_at(self.col + 1, self.row + m) is not None and \
@@ -202,15 +205,12 @@ class Pawn(Piece):
                 self.col, self.row + (m * 2)) is None:
                 valid_moves.add((self.col, self.row + (m * 2)))
 
-        valid_moves: set = set()
 
         if self.color == board.turn or no_turn:
             move(1 if self.color else -1)
 
         if _filter:
-            print(board.exportFEN())
             board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
-            print(board.exportFEN())
 
         return valid_moves
 
@@ -223,7 +223,12 @@ class Rook(Piece):
             c = self.line_movement(0, 1, board, 8, self.color)
             d = self.line_movement(0, -1, board, 8, self.color)
 
-            return flatten(a, b, c, d)
+            valid_moves = flatten(a, b, c, d)
+
+            if _filter:
+                board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
+
+            return valid_moves
 
         return None
 
@@ -243,6 +248,9 @@ class Knight(Piece):
                 else:
                     valid_moves.add(move)
 
+        if _filter:
+            board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
+
         return valid_moves
 
 
@@ -254,7 +262,12 @@ class Bishop(Piece):
             c = self.line_movement(1, 1, board, 8, self.color)
             d = self.line_movement(-1, -1, board, 8, self.color)
 
-            return flatten(a, b, c, d)
+            valid_moves = flatten(a, b, c, d)
+
+            if _filter:
+                board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
+
+            return valid_moves
 
         return None
 
@@ -274,7 +287,12 @@ class Queen(Piece):
             g = self.line_movement(1, 1, board, 8, self.color)
             h = self.line_movement(-1, -1, board, 8, self.color)
 
-            return flatten(a, b, c, d, e, f, g, h)
+            valid_moves = flatten(a, b, c, d, e, f, g, h)
+
+            if _filter:
+                board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
+
+            return valid_moves
 
         return None
 
@@ -299,7 +317,9 @@ class King(Piece):
             o = flatten(a, b, c, d, e, f, g, h)
 
             opp_pieces = board.pieces[not self.color]
+
             if _filter:
+                board.filter_moves_if_opponent_can_reach(self, self.get_pos(), o)
                 for p in opp_pieces:
                     if type(p) != King:
                         o.difference_update(p.get_valid_moves(board, no_turn=True, _filter=False))

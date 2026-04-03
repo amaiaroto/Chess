@@ -5,7 +5,7 @@ toggle = False
 
 
 class Board:
-    def __init__(self, grid_cx_ry: tuple[int, int], screen, pg,
+    def __init__(self, grid_cx_ry: tuple[int, int] = (8, 8), screen=None, pg=None,
                  fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
         self.valid = None
         self.picked_piece: Pieces.Piece
@@ -144,13 +144,13 @@ class Board:
 
     def undo_go_to(self, move_info: Undo.UndoMove):
         move_info.sp.go_to(*move_info.sp_pos)
-        r, c = move_info.sp_pos
+        c, r = move_info.sp_pos
         piece = move_info.sp
 
         self.state[r][self.get_letter_from_index(c)] = piece
         eaten_piece = move_info.piece_at_target
-        self.state[move_info.pos_of_piece_at_target[0]][
-            Board.get_letter_from_index(move_info.pos_of_piece_at_target[1])] = eaten_piece
+        self.state[move_info.pos_of_piece_at_target[1]][
+            Board.get_letter_from_index(move_info.pos_of_piece_at_target[0])] = eaten_piece
 
         if not move_info.lw:
             if eaten_piece is not None:
@@ -174,7 +174,7 @@ class Board:
         assert eaten_piece is None or eaten_piece.color != piece.color
         assert piece is not None
 
-        move_info = Undo.UndoMove(self, piece, (r, c), lw)
+        move_info = Undo.UndoMove(self, piece, (c, r), lw)
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
 
@@ -321,6 +321,13 @@ class Board:
         return None
 
     def filter_moves_if_opponent_can_reach(self, piece: Pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
+        """
+        edit valid_moves and remove illegal moves
+        :param piece:
+        :param pos:
+        :param valid_moves: this is modified in place by this function
+        :return: nothing
+        """
         assert piece is not None
 
         vm = set()
@@ -329,7 +336,6 @@ class Board:
             opp_pieces = self.get_pieces()[not piece.color]
 
             for move in valid_moves:
-                # todo: fix flipped C&R somewhere
                 undo = self.go_to(*move, piece, lw=True)
 
                 for op in opp_pieces:

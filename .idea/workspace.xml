@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="ok ok ok!">
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="found the problem!">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessTest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pieces.py" beforeDir="false" afterPath="$PROJECT_DIR$/Pieces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,10 +70,15 @@
   "keyToString": {
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Debug",
+    "Notification.DisplayName-DoNotAsk-git.push.result": "",
+    "Notification.DisplayName-DoNotAsk-vcs.commit.finished": "3 files committed",
+    "Notification.DoNotAsk-git.push.result": "true",
+    "Notification.DoNotAsk-vcs.commit.finished": "true",
+    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Run",
+    "Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor": "Debug",
     "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
     "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
-    "Python tests.Python tests in ChessTest.py.executor": "Debug",
+    "Python tests.Python tests in ChessTest.py.executor": "Run",
     "Python.Board.executor": "Run",
     "Python.Chess (1).executor": "Debug",
     "Python.Chess.executor": "Run",
@@ -98,29 +106,7 @@
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for ChessTest.ChessTest.test_glitches">
-    <configuration name="Chess (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Chess" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Chess.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.Chess">
     <configuration name="Chess" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -156,6 +142,21 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;ChessTest.ChessTest.test_glitches&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for ChessTest.ChessTest.test_valid_moves_filter_2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="Chess" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;ChessTest.ChessTest.test_valid_moves_filter_2&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -206,11 +207,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_glitches" />
+        <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2" />
         <item itemvalue="Python tests.Python tests in ChessTest.py" />
+        <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_glitches" />
         <item itemvalue="Python tests.Python tests for ChessTest.TestMoves" />
         <item itemvalue="Python tests.Python tests for ChessTest.TestMoves.test_fen" />
-        <item itemvalue="Python.Chess (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -557,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775005920972</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="found the problem!">
+      <option name="closed" value="true" />
+      <created>1775167544436</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1775167544436</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -592,32 +601,17 @@
     <MESSAGE value="eh" />
     <MESSAGE value="saving ''s" />
     <MESSAGE value="ok ok ok!" />
-    <option name="LAST_COMMIT_MESSAGE" value="ok ok ok!" />
-    <option name="LAST_CHUNK_COMMIT_MESSAGE" value="ok ok ok!" />
+    <MESSAGE value="found the problem!" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Pieces.py</url>
-          <line>209</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Pieces.py</url>
-          <line>214</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Board.py</url>
-          <line>332</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ChessTest.py</url>
-          <line>28</line>
-          <option name="timeStamp" value="22" />
+          <line>36</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
