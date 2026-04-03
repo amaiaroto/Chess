@@ -15,8 +15,7 @@ class Board:
         self.columns, self.rows = grid_cx_ry
         self.pg = pg
         self.screen = screen
-        self.turn = True
-        self.state = self.readFEN(fen)
+        self.state, self.turn = self.readFEN(fen)
         self.bx = 0
         self.by = 0
         self.cw = 0
@@ -43,16 +42,16 @@ class Board:
         return chr(96 + index)
 
     @staticmethod
-    def readFEN(fen, sep='/') -> dict:
+    def readFEN(fen, sep='/') -> tuple[dict, bool]:
         """
         :param sep: separator
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
         :return: a {{}} of classes
         """
-
+        turn = fen.split()[1]
         state = {}
         rp = 8
-        rows = fen.split(sep)
+        rows = fen.split()[0].split(sep)
 
         for row in rows:
             cp = 1
@@ -67,7 +66,7 @@ class Board:
                     current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
-        return state
+        return state, turn
 
     def printASCII(self) -> str:
         print('\n' * 16)
