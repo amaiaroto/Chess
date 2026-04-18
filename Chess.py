@@ -1,13 +1,19 @@
+print('Imports:')
+
 import keyboard as kb
+
+print('"keyboard": OK')
 import os
+
+print('"os": OK')
 import sys
 
-print('Imports:')
+print('"sys": OK')
 
 from contextlib import redirect_stdout
 from Board import Board
 
-print('Board: OK')
+print('"Board": OK')
 
 bg_color = (183, 255, 183)
 title_screen = True
@@ -15,11 +21,11 @@ title_screen = True
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
 
-print('Pygame: OK')
+print('"pygame": OK')
 
 from Screen import Screen
 
-print('Screen: OK\n\nOK')
+print('"Screen": OK\n\nOK')
 
 pg.init()
 pg.mixer.init()
