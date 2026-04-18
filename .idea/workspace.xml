@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="4/2/2026">
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessTest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +71,7 @@
     "Notification.DisplayName-DoNotAsk-vcs.commit.finished": "3 files committed",
     "Notification.DoNotAsk-git.push.result": "true",
     "Notification.DoNotAsk-vcs.commit.finished": "true",
+    "Python tests.Python tests for ChessTest.ChessTest.executor": "Debug",
     "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Run",
     "Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor": "Debug",
     "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
@@ -102,7 +104,7 @@
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Chess">
+  <component name="RunManager" selected="Python tests.Python tests for ChessTest.ChessTest">
     <configuration name="Chess" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -124,6 +126,21 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for ChessTest.ChessTest" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="Chess" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;ChessTest.ChessTest&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests for ChessTest.ChessTest.test_glitches" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -171,21 +188,6 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for ChessTest.TestMoves.test_fen" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="Chess" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;ChessTest.TestMoves.test_fen&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="Python tests in ChessTest.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -203,11 +205,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for ChessTest.ChessTest" />
         <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2" />
         <item itemvalue="Python tests.Python tests in ChessTest.py" />
         <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_glitches" />
         <item itemvalue="Python tests.Python tests for ChessTest.TestMoves" />
-        <item itemvalue="Python tests.Python tests for ChessTest.TestMoves.test_fen" />
       </list>
     </recent_temporary>
   </component>
@@ -570,7 +572,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775179618919</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="adding turns in the FEN string">
+      <option name="closed" value="true" />
+      <created>1775181993974</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1775181993974</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -607,7 +617,8 @@
     <MESSAGE value="ok ok ok!" />
     <MESSAGE value="found the problem!" />
     <MESSAGE value="4/2/2026" />
-    <option name="LAST_COMMIT_MESSAGE" value="4/2/2026" />
+    <MESSAGE value="adding turns in the FEN string" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding turns in the FEN string" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -633,6 +644,7 @@
         <watch expression="board.exportFEN()" language="Python" />
         <watch expression="self.exportFEN()" language="Python" />
         <watch expression="self.state" language="Python" />
+        <watch expression="pawn.get_valid_moves(board, no_turn=True)" language="Python" />
       </configuration>
       <configuration name="PythonConfigurationType">
         <watch expression="self.picked_piece.moves" />

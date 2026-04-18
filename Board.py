@@ -6,7 +6,7 @@ toggle = False
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int] = (8, 8), screen=None, pg=None,
-                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"):
+                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w"):
         self.valid = None
         self.picked_piece: Pieces.Piece
         self.picked_piece = None
@@ -66,7 +66,7 @@ class Board:
                     current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
-        return state, turn
+        return state, {'w': True, 'b': False}[turn]
 
     def printASCII(self) -> str:
         print('\n' * 16)
@@ -107,7 +107,7 @@ class Board:
 
             fen += ar + '/'
 
-        return fen[:-1]
+        return fen[:-1] + {True: ' w', False: ' b'}[self.turn]
 
     @staticmethod
     def get_color_name(color) -> str:
@@ -351,4 +351,4 @@ class Board:
 
     @staticmethod
     def starting_position():
-        return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+        return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w'
