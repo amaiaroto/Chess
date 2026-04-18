@@ -90,7 +90,7 @@ class Button:
 
 fen = Board.starting_position()
 
-board = Board((8, 8), screen, pg, fen)
+board = Board((8, 8), screen, pg, '3qkbnr/3pp2p/6Q1/8/4B/3/8/8 w')
 
 
 def exit_chess(code: int | str = 0):

@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Chess.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Chess.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Board.py" beforeDir="false" afterPath="$PROJECT_DIR$/Board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Chess.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessTest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,39 +67,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-git.push.result": "",
-    "Notification.DisplayName-DoNotAsk-vcs.commit.finished": "3 files committed",
-    "Notification.DoNotAsk-git.push.result": "true",
-    "Notification.DoNotAsk-vcs.commit.finished": "true",
-    "Python tests.Python tests for ChessTest.ChessTest.executor": "Debug",
-    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Run",
-    "Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor": "Debug",
-    "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
-    "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
-    "Python tests.Python tests in ChessTest.py.executor": "Run",
-    "Python.Board.executor": "Run",
-    "Python.Chess (1).executor": "Debug",
-    "Python.Chess.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.scratch.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/asher/PycharmProjects/Chess",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "memory.settings"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-git.push.result&quot;: &quot;&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-vcs.commit.finished&quot;: &quot;3 files committed&quot;,
+    &quot;Notification.DoNotAsk-git.push.result&quot;: &quot;true&quot;,
+    &quot;Notification.DoNotAsk-vcs.commit.finished&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.TestMoves.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.TestMoves.test_fen.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in ChessTest.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Board.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Chess (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Chess.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/asher/PycharmProjects/Chess&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
@@ -104,7 +108,7 @@
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for ChessTest.ChessTest">
+  <component name="RunManager" selected="Python.Chess">
     <configuration name="Chess" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -114,12 +118,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.13 (Chess)" />
+      <option name="SDK_NAME" value="Python 3.14 virtualenv at C:\Users\asher\PycharmProjects\Chess\.venv" />
       <option name="WORKING_DIRECTORY" value="C:\Users\asher\PycharmProjects\Chess" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\asher\PycharmProjects\Chess\Chess.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Chess.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -203,6 +207,14 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.Chess" />
+      <item itemvalue="Python tests.Python tests for ChessTest.ChessTest" />
+      <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_glitches" />
+      <item itemvalue="Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2" />
+      <item itemvalue="Python tests.Python tests for ChessTest.TestMoves" />
+      <item itemvalue="Python tests.Python tests in ChessTest.py" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Python tests for ChessTest.ChessTest" />
@@ -227,30 +239,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771247068679</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Chess.py  main&#10;Board.py  draw&#10;Screen.py  screen&#10;Pieces.py object">
-      <option name="closed" value="true" />
-      <created>1771704726505</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1771704726505</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Chess.py  main&#10;Board.py  draw&#10;Screen.py  screen&#10;Pieces.py object&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;">
-      <option name="closed" value="true" />
-      <created>1771704749351</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1771704749351</updated>
-    </task>
-    <task id="LOCAL-00003" summary="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;">
-      <option name="closed" value="true" />
-      <created>1771704807289</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1771704807289</updated>
     </task>
     <task id="LOCAL-00004" summary="chess&#10;&#10;Signed-off-by: amaiaroto &lt;asher.maiaroto@gmail.com&gt;">
       <option name="closed" value="true" />
@@ -580,7 +568,71 @@
       <option name="project" value="LOCAL" />
       <updated>1775181993974</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="aa">
+      <option name="closed" value="true" />
+      <created>1776533698945</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1776533698945</updated>
+    </task>
+    <task id="LOCAL-00046" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539486578</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539486578</updated>
+    </task>
+    <task id="LOCAL-00047" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539493051</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539493051</updated>
+    </task>
+    <task id="LOCAL-00048" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539504207</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539504207</updated>
+    </task>
+    <task id="LOCAL-00049" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539514108</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539514108</updated>
+    </task>
+    <task id="LOCAL-00050" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539518449</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539518449</updated>
+    </task>
+    <task id="LOCAL-00051" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539523557</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539523557</updated>
+    </task>
+    <task id="LOCAL-00052" summary="j">
+      <option name="closed" value="true" />
+      <created>1776539528668</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1776539528668</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -618,7 +670,9 @@
     <MESSAGE value="found the problem!" />
     <MESSAGE value="4/2/2026" />
     <MESSAGE value="adding turns in the FEN string" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding turns in the FEN string" />
+    <MESSAGE value="aa" />
+    <MESSAGE value="j" />
+    <option name="LAST_COMMIT_MESSAGE" value="j" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -628,6 +682,11 @@
           <url>file://$PROJECT_DIR$/ChessTest.py</url>
           <line>36</line>
           <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Pieces.py</url>
+          <line>186</line>
+          <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -649,6 +708,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="self.picked_piece.moves" />
         <watch expression="piece.moves" />
+        <watch expression="valid_moves" language="Python" />
       </configuration>
     </watches-manager>
   </component>
