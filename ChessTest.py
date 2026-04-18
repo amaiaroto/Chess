@@ -17,7 +17,7 @@ class ChessTest(unittest.TestCase):
         self.assertEqual({(4, 5), (4, 4), (4, 3), (5, 3), (6, 5), (6, 3)}, piece2.get_valid_moves(board))
 
     def test_valid_moves_filter_2(self):
-        board = Board.Board((8, 8), None, None, fen='3qkbnr/3pp2p/6Q1/8/4B/3/8/8 w')
+        board = Board.Board((8, 8), None, None, fen='3qkbnr/3pp2p/6Q1/8/4B/8/8/8 w')
         board.printASCII()
         pawn = board.get_piece_at(8, 7)
         self.assertIsNotNone(pawn)
