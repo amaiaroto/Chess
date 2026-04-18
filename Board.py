@@ -332,10 +332,9 @@ class Board:
         vm = set()
 
         if valid_moves is not None:
-            opp_pieces = self.get_pieces()[not piece.color]
-
             for move in valid_moves:
                 undo = self.go_to(*move, piece, lw=True)
+                opp_pieces = self.get_pieces()[not piece.color]
 
                 for op in opp_pieces:
                     op_vm = op.get_valid_moves(self, no_turn=True, _filter=False)
