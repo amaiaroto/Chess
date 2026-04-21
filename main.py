@@ -1,5 +1,4 @@
 print('Imports:')
-
 import keyboard as kb
 
 print('"keyboard": OK')
@@ -9,11 +8,10 @@ print('"os": OK')
 import sys
 
 print('"sys": OK')
-
 from contextlib import redirect_stdout
-from Board import Board
+from board import Board
 
-print('"Board": OK')
+print('"board": OK')
 
 bg_color = (183, 255, 183)
 title_screen = True
@@ -23,16 +21,12 @@ with redirect_stdout(open(os.devnull, 'w')):
 
 print('"pygame": OK')
 
-from Screen import Screen
-
-print('"Screen": OK\n\nOK')
-
 pg.init()
 pg.mixer.init()
 
 rect = pg.rect.Rect(0, 0, 0, 0)
 sound = pg.mixer.Sound('click_sfx.mp3')
-screen = Screen(pg, 800, 800).screen
+screen = pg.display.set_mode((800, 800))
 button_font = pg.font.Font('NotoSansSymbols-Bold.ttf', 72)
 button_font2 = pg.font.SysFont('Segoe UI Symbol', 52)
 pg.display.set_icon(pg.image.load('chess-icon.png'))
@@ -40,13 +34,19 @@ pg.display.set_caption('Chess — Play chess against a smart AI!')
 
 
 class Button:
-    def __init__(self, x, y, w, h, text, font, color, hover_color):
+    def __init__(self, x: int, y: int, w: int, h: int, text: str, font: pg.Font,
+                 color: tuple[int, int, int], hover_color: tuple[int, int, int]):
         self.rect = pg.Rect(x, y, w, h)
         self.text = font.render(self.parse(text), True, (0, 0, 0))
         self.color = color
         self.hover_color = hover_color
 
-    def draw(self, screen):
+    def draw(self, screen: pg.Surface):
+        """
+        Draw the button on the screen
+        :param screen: The Surface to draw on
+        """
+
         mouse = pg.mouse.get_pos()
         current_color = self.hover_color if self.rect.collidepoint(mouse) else self.color
         pg.draw.rect(screen, current_color, self.rect, border_radius=12)
@@ -54,7 +54,7 @@ class Button:
         text_rect = self.text.get_rect(center=self.rect.center)
         screen.blit(self.text, text_rect)
 
-    def clicked(self):
+    def clicked(self) -> bool:
         """
         get and return the cursor
         if the cursor is touching the button, return True and True
@@ -88,9 +88,17 @@ class Button:
         return result
 
 
+class Popup:
+    def __init__(self, color, screen):
+        pg.draw.rect(screen, (57, 57, 58),
+                     pg.Rect(screen.get_width() / 2 - 250, screen.get_height() / 2 - 150, 500, 300), border_radius=10)
+        text = pg.font.Font(None, 37).render('Checkmate!', True, (245, 245, 245))
+        screen.blit(text, (screen.get_width() / 2 - 28, screen.get_height() / 2))
+
+
 fen = Board.starting_position()
 
-board = Board((8, 8), screen, pg, '3qkbnr/3pp2p/6Q1/8/4B/3/8/8 w')
+board = Board((8, 8), screen, pg, '3qkbnr/3pp2p/6Q1/8/4B3/6K1/8/8 b')
 
 
 def exit_chess(code: int | str = 0):
@@ -143,7 +151,6 @@ while True:
 
                 state = board.state
                 start_chess()
-
             elif quit_button.clicked():
                 exit_chess()
 
@@ -157,7 +164,7 @@ while True:
 
             if pg.rect.Rect(340, 220, 124, 161).collidepoint(pg.mouse.get_pos()) and event.type == pg.MOUSEBUTTONDOWN:
                 sound.play()
-
+            Popup(1, screen)
         else:
             if kb.is_pressed('shift+alt+b'):
                 board.printASCII()

@@ -1,4 +1,4 @@
-from Pieces import Piece
+from pieces import Piece
 
 
 class UndoMove:

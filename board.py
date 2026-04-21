@@ -1,5 +1,5 @@
-import Pieces
-import Undo
+import pieces
+import undo_move
 
 toggle = False
 
@@ -8,7 +8,7 @@ class Board:
     def __init__(self, grid_cx_ry: tuple[int, int] = (8, 8), screen=None, pg=None,
                  fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w"):
         self.valid = None
-        self.picked_piece: Pieces.Piece
+        self.picked_piece: pieces.Piece
         self.picked_piece = None
         self.black_color = (80, 43, 17)
         self.white_color = (203, 198, 172)
@@ -25,7 +25,7 @@ class Board:
         self.jail = {True: {}, False: {}}
         self.won = self.has_won()  # None, white, or black (true or false)
         self.pieces = self.get_pieces()
-        self.history: list[Undo.UndoMove] = []
+        self.history: list[undo_move.UndoMove] = []
 
     """add fields to store the left x, top y, cell width and cell height
     then implement a method that gets as input the mouse coordinates (every time you click left button)
@@ -63,13 +63,12 @@ class Board:
                 if col.isdigit():
                     cp += int(col)
                 else:
-                    current_row[Board.get_letter_from_index(cp)] = Pieces.Piece.create_piece(col, col=cp, row=rp)
+                    current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
         return state, {'w': True, 'b': False}[turn]
 
     def printASCII(self) -> str:
-        print('\n' * 16)
         board = ""
 
         for r in range(8, 0, -1):
@@ -113,7 +112,7 @@ class Board:
     def get_color_name(color) -> str:
         return 'white' if color else 'black'
 
-    def get_piece_at(self, c, r) -> Pieces.Piece | None:
+    def get_piece_at(self, c, r) -> pieces.Piece | None:
         """
 
         :param c: 1 based
@@ -141,7 +140,7 @@ class Board:
         self.state[r][self.get_letter_from_index(c)] = piece
         return self.state
 
-    def undo_go_to(self, move_info: Undo.UndoMove):
+    def undo_go_to(self, move_info: undo_move.UndoMove):
         move_info.sp.go_to(*move_info.sp_pos)
         c, r = move_info.sp_pos
         piece = move_info.sp
@@ -159,7 +158,7 @@ class Board:
                 jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece - 1
                 self.won = self.has_won()
 
-    def go_to(self, c, r, piece, lw=False) -> Undo.UndoMove:
+    def go_to(self, c, r, piece, lw=False) -> undo_move.UndoMove:
         """
         :param c: c
         :param r: r
@@ -168,12 +167,12 @@ class Board:
         :return:
         """
 
-        eaten_piece: Pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
+        eaten_piece: pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
 
         assert eaten_piece is None or eaten_piece.color != piece.color
         assert piece is not None
 
-        move_info = Undo.UndoMove(self, piece, (c, r), lw)
+        move_info = undo_move.UndoMove(self, piece, (c, r), lw)
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
 
@@ -243,7 +242,7 @@ class Board:
 
                 real_r = (self.rows - r) + 1
                 get_icon = lambda p: \
-                    Pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, Pieces.King) and \
+                    pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, pieces.King) and \
                                                                             self.won == p.color else p.get_icon()
 
                 if self.state[real_r][lc] is not None:
@@ -262,7 +261,7 @@ class Board:
 
     def handle_click(self, x, y):
         c, r = self.get_cell(x, y)
-        piece: Pieces.Piece = self.get_piece_at(c, r)
+        piece: pieces.Piece = self.get_piece_at(c, r)
         has_valid_moves = self.valid is not None and len(self.valid) > 0
 
         if piece is None and not has_valid_moves:
@@ -301,7 +300,7 @@ class Board:
 
     def get_pieces(self) -> dict[bool, set]:
         re = {True: set(), False: set()}
-        x: Pieces.Piece
+        x: pieces.Piece
 
         for i in self.state.values():
             for x in i.values():
@@ -310,16 +309,16 @@ class Board:
 
         return re
 
-    def get_king(self, color) -> Pieces.King | None:
+    def get_king(self, color) -> pieces.King | None:
         color_pieces = self.get_pieces()[color]
 
         for p in color_pieces:
-            if isinstance(p, Pieces.King):
+            if isinstance(p, pieces.King):
                 return p
 
         return None
 
-    def filter_moves_if_opponent_can_reach(self, piece: Pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
+    def filter_moves_if_opponent_can_reach(self, piece: pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
         """
         edit valid_moves and remove illegal moves
         :param piece:
