@@ -33,6 +33,18 @@ pg.display.set_icon(pg.image.load('chess-icon.png'))
 pg.display.set_caption('Chess — Play chess against a smart AI!')
 
 
+class State:
+    play_button_clicked = 0
+    quit_button_clicked = 0
+    knight_character_clicked = 0
+    back_button_clicked = 0
+    white_won = False
+    white_castling = [False, False]
+    black_won = False
+    black_castling = [False, False]
+    turn = True
+
+
 class Button:
     def __init__(self, x: int, y: int, w: int, h: int, text: str, font: pg.Font,
                  color: tuple[int, int, int], hover_color: tuple[int, int, int]):
@@ -148,10 +160,11 @@ while True:
             quit_button.draw(screen)
 
             if play_button.clicked() or kb.is_pressed('enter'):
-
+                State.play_button_clicked += 1
                 state = board.state
                 start_chess()
             elif quit_button.clicked():
+                State.quit_button_clicked += 1
                 exit_chess()
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
@@ -163,6 +176,7 @@ while True:
                 text_pos += t.get_size()[0] // 1.1
 
             if pg.rect.Rect(340, 220, 124, 161).collidepoint(pg.mouse.get_pos()) and event.type == pg.MOUSEBUTTONDOWN:
+                State.knight_character_clicked += 1
                 sound.play()
             Popup(1, screen)
         else:
