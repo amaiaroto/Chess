@@ -1,17 +1,17 @@
 print('Imports:')
 import keyboard as kb
 
-print('"keyboard": OK')
+print('keyboard = OK')
 import os
 
-print('"os": OK')
+print('os = OK')
 import sys
 
-print('"sys": OK')
+print('sys = OK')
 from contextlib import redirect_stdout
 from board import Board
 
-print('"board": OK')
+print('board = OK')
 
 bg_color = (183, 255, 183)
 title_screen = True
@@ -19,14 +19,14 @@ title_screen = True
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
 
-print('"pygame": OK')
+print('pygame = OK')
 
 pg.init()
 pg.mixer.init()
 
 rect = pg.rect.Rect(0, 0, 0, 0)
 sound = pg.mixer.Sound('click_sfx.mp3')
-screen = pg.display.set_mode((800, 800))
+screen: pg.Surface = pg.display.set_mode((800, 800))
 button_font = pg.font.Font('NotoSansSymbols-Bold.ttf', 72)
 button_font2 = pg.font.SysFont('Segoe UI Symbol', 52)
 pg.display.set_icon(pg.image.load('chess-icon.png'))
