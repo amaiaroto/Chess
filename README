@@ -27,7 +27,7 @@ started bot:
     a. show winner
 - add ctc & download history
 
-TODO: refactor the UI and infinite drawing loop:
+TOD: refactor the UI and infinite drawing loop:
  -add a UI state class
    -contains a list of UI abjects to draw (list because it needs to support drawing order (layers))
    -add a draw method that loops over the list and calls the draw method of each item in the list
