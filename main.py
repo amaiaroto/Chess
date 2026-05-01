@@ -1,25 +1,15 @@
-print('Imports:')
 import keyboard as kb
-
-print('keyboard = OK')
 import os
-
-print('os = OK')
 import sys
-
-print('sys = OK')
 from contextlib import redirect_stdout
 from board import Board
-
-print('board = OK')
+from enum import Enum
 
 bg_color = (183, 255, 183)
 title_screen = True
 
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
-
-print('pygame = OK')
 
 pg.init()
 pg.mixer.init()
@@ -33,16 +23,14 @@ pg.display.set_icon(pg.image.load('chess-icon.png'))
 pg.display.set_caption('Chess — Play chess against a smart AI!')
 
 
-class State:
-    play_button_clicked = 0
-    quit_button_clicked = 0
-    knight_character_clicked = 0
-    back_button_clicked = 0
-    white_won = False
-    white_castling = [False, False]
-    black_won = False
-    black_castling = [False, False]
-    turn = True
+class State(Enum):
+    # -state field that is an enumeration of 4 values: init, game, exit, checkmate
+    # -components list: this contains the list of graphical elements that need to be drawn in the current state
+    #
+    # add an init method that sets the state to init and adds the play/quit and horse graphical elements to the component list
+    #
+    # add a draw method that loops over the list of components and draws them.
+    state = Enum('state', [("value_1", 1), ("value_2", 2)])
 
 
 class Button:
@@ -53,18 +41,18 @@ class Button:
         self.color = color
         self.hover_color = hover_color
 
-    def draw(self, screen: pg.Surface):
+    def draw(self, surface: pg.Surface):
         """
         Draw the button on the screen
-        :param screen: The Surface to draw on
+        :param surface: The Surface to draw on
         """
 
         mouse = pg.mouse.get_pos()
         current_color = self.hover_color if self.rect.collidepoint(mouse) else self.color
-        pg.draw.rect(screen, current_color, self.rect, border_radius=12)
+        pg.draw.rect(surface, current_color, self.rect, border_radius=12)
 
         text_rect = self.text.get_rect(center=self.rect.center)
-        screen.blit(self.text, text_rect)
+        surface.blit(self.text, text_rect)
 
     def clicked(self) -> bool:
         """
@@ -101,16 +89,41 @@ class Button:
 
 
 class Popup:
-    def __init__(self, color, screen):
-        pg.draw.rect(screen, (57, 57, 58),
-                     pg.Rect(screen.get_width() / 2 - 250, screen.get_height() / 2 - 150, 500, 300), border_radius=10)
-        text = pg.font.Font(None, 37).render('Checkmate!', True, (245, 245, 245))
-        screen.blit(text, (screen.get_width() / 2 - 28, screen.get_height() / 2))
+    def __init__(self, color, surface):
+        global checkmate
+
+        width = 500
+        height = 300
+        pg.draw.rect(surface, (57, 57, 58),
+                     pg.Rect(surface.get_width() // 2 - width // 2, surface.get_height() // 2 - height // 2, width,
+                             height),
+                     border_radius=10)
+        text = pg.font.Font(None, 37).render(f'Checkmate!\n{ {True: "White", False: "Black"}[color]} wins!', True,
+                                             (245, 245, 245))
+        ok_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 2 - 30, width // 2,
+                           height // 4,
+                           "OK", button_font, (0, 255, 0), (0, 205, 0))
+        exit_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 1.70 - 15, width // 2,
+                             height // 4,
+                             "EXIT", button_font, (255, 0, 0), (205, 0, 0))
+
+        surface.blit(text,
+                     (surface.get_width() // 2 - text.get_width() // 2, surface.get_height() // 2 - height // 2.5))
+        ok_button.draw(surface)
+        exit_button.draw(surface)
+
+        if exit_button.clicked():
+            exit_chess()
+
+        if ok_button.clicked():
+            checkmate = False
 
 
 fen = Board.starting_position()
 
-board = Board((8, 8), screen, pg, '3qkbnr/3pp2p/6Q1/8/4B3/6K1/8/8 b')
+board = Board()
+checkmate = bool
+player_color = True
 
 
 def exit_chess(code: int | str = 0):
@@ -120,17 +133,24 @@ def exit_chess(code: int | str = 0):
 
 
 def start_chess() -> bool:
-    global title_screen
+    global title_screen, board, checkmate
 
     title_screen = False
+    board = Board((8, 8), screen, pg, fen)
+    checkmate = False
 
     return title_screen
 
 
+# create the UI state
+
 while True:
+    # State.draw()
+
     for event in pg.event.get():
         if not title_screen and event.type == pg.MOUSEBUTTONDOWN:
             x, y = pg.mouse.get_pos()
+            # state.handle_click(x,y)
             board.handle_click(x, y)
 
         if event.type == pg.QUIT:
@@ -160,11 +180,10 @@ while True:
             quit_button.draw(screen)
 
             if play_button.clicked() or kb.is_pressed('enter'):
-                State.play_button_clicked += 1
+
                 state = board.state
                 start_chess()
             elif quit_button.clicked():
-                State.quit_button_clicked += 1
                 exit_chess()
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
@@ -176,10 +195,9 @@ while True:
                 text_pos += t.get_size()[0] // 1.1
 
             if pg.rect.Rect(340, 220, 124, 161).collidepoint(pg.mouse.get_pos()) and event.type == pg.MOUSEBUTTONDOWN:
-                State.knight_character_clicked += 1
                 sound.play()
-            Popup(1, screen)
         else:
+
             if kb.is_pressed('shift+alt+b'):
                 board.printASCII()
 
@@ -187,6 +205,11 @@ while True:
                                  (255, 0, 0), (200, 0, 0))
             back_button.draw(screen)
             board.draw()
+            if board.checkmate():
+                checkmate = True
+
+            if checkmate:
+                Popup(not board.turn, screen)
 
             if back_button.clicked() or kb.is_pressed('esc'):
                 title_screen = True

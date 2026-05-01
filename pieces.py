@@ -16,6 +16,11 @@ piece_icons: dict[str, str] = {
     'w': '🜲'
 }
 
+values = {
+    'p': 1,
+    'b': 3,
+    'n': 3
+}
 
 def flatten(*i) -> set:
     r = set()
@@ -49,6 +54,7 @@ class Piece:
         self.col: int = col
         self.row: int = row
         self.win = win
+        self.value: int = 1
 
     def is_white(self):
         return self.color
@@ -105,7 +111,7 @@ class Piece:
                 return King(name, col, row)
 
             case 'w':
-                return King(name, col, row, True)
+                return King(name, col, row)
 
         print(name)
 
@@ -205,17 +211,21 @@ class Pawn(Piece):
                 self.col, self.row + (m * 2)) is None:
                 valid_moves.add((self.col, self.row + (m * 2)))
 
-
         if self.color == board.turn or no_turn:
             move(1 if self.color else -1)
 
         if _filter:
+            # removes this piece valid moves that cause other pieces to be able to reach the king (of the same color)
             board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
 
         return valid_moves
 
 
 class Rook(Piece):
+    def __init__(self, name: str, col: int, row: int):
+        super().__init__(name, col, row)
+        self.value = 5
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             a = self.line_movement(1, 0, board, 8, self.color)
@@ -234,6 +244,10 @@ class Rook(Piece):
 
 
 class Knight(Piece):
+    def __init__(self, name: str, col: int, row: int):
+        super().__init__(name, col, row)
+        self.value = 3
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         valid_moves: set = set()
         moves = [(self.col + 2, self.row + 1), (self.col + 2, self.row - 1), (self.col + 1, self.row + 2),
@@ -255,6 +269,10 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
+    def __init__(self, name: str, col: int, row: int):
+        super().__init__(name, col, row)
+        self.value = 3
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             a = self.line_movement(-1, 1, board, 8, self.color)
@@ -273,6 +291,10 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
+    def __init__(self, name: str, col: int, row: int):
+        super().__init__(name, col, row)
+        self.value = 9
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         if self.color == board.turn or no_turn:
             # - & |
@@ -301,6 +323,10 @@ MoveError = PieceError
 
 
 class King(Piece):
+    def __init__(self, name: str, col: int, row: int):
+        super().__init__(name, col, row)
+        self.value = 12
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         global MoveError
 
@@ -319,10 +345,8 @@ class King(Piece):
             opp_pieces = board.pieces[not self.color]
 
             if _filter:
-                board.filter_moves_if_opponent_can_reach(self, self.get_pos(), o)
-                for p in opp_pieces:
-                    if type(p) != King:
-                        o.difference_update(p.get_valid_moves(board, no_turn=True, _filter=False))
+                # removes the king's valid moves that/are reachable by opponent pieces
+                board.filter_moves_if_opponent_can_reach(self, None, o)
 
             return o
 

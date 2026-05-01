@@ -10,6 +10,38 @@ TODOs:
         # 6. add turn indicator
         # 7. add counts of taken pieces
         # 8. add turn info in fen (done)
+4/30
+fixed valid moves of king
+added test for that
+started bot:
+-level 0:random move
+-level 1:
+  -create function that evaluates new score (the higher numbers first) (for each color)
+  -loop over pieces and move to each valid move, pick move that brings the highest score board
+  eval: sum the value of each piece W_V and B_V value(white)=W_V/(W_V+B_V)
+
+
+4/25/2026
+-checkmate detection
+-checkmate popup (prep)
+    a. show winner
+- add ctc & download history
+
+TODO: refactor the UI and infinite drawing loop:
+ -add a UI state class
+   -contains a list of UI abjects to draw (list because it needs to support drawing order (layers))
+   -add a draw method that loops over the list and calls the draw method of each item in the list
+   -current UI states: INIT, GAME, END, CHECKMATE
+   -current transitions:
+     start at INIT
+     INIT -play click-> GAME
+     INIT -quit--> END
+     INIT -horse-->INIT
+     GAME -back---> INIT
+     GAME --checkmate-->CHECKMATE
+     CHECKMATE --ok-->INIT
+
+
 
 4/18
 -fixed bug in test of valid moves (did not re-get the opponent pieces after each piece move

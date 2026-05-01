@@ -1,5 +1,6 @@
 import pieces
 import undo_move
+from main import player_color
 
 toggle = False
 
@@ -34,7 +35,6 @@ class Board:
     implement a method in board that receives the cell coordinates as input and returns the valid moves from that location.
     
     change the color (turn) in the board to a boolean as in pieces.
-    
     """
 
     @staticmethod
@@ -256,8 +256,9 @@ class Board:
 
                 if self.valid is not None and len(self.valid) > 0:
                     for p in self.valid:
-                        center = self.get_cell_center(*p)
-                        self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
+                        if p.color == player_color:
+                            center = self.get_cell_center(*p)
+                            self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
 
     def handle_click(self, x, y):
         c, r = self.get_cell(x, y)
@@ -321,6 +322,8 @@ class Board:
     def filter_moves_if_opponent_can_reach(self, piece: pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
         """
         edit valid_moves and remove illegal moves
+        checks whether there exists an opponent piece that can reach the pos
+        when the piece is moved to each of its valid moves
         :param piece:
         :param pos:
         :param valid_moves: this is modified in place by this function
@@ -328,10 +331,14 @@ class Board:
         """
         assert piece is not None
 
+        check_valid_move4piece = pos is None
+
         vm = set()
 
         if valid_moves is not None:
             for move in valid_moves:
+                if check_valid_move4piece:
+                    pos = move
                 undo = self.go_to(*move, piece, lw=True)
                 opp_pieces = self.get_pieces()[not piece.color]
 
@@ -350,3 +357,35 @@ class Board:
     @staticmethod
     def starting_position():
         return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w'
+
+    def checkmate(self):
+        ps = self.get_pieces()
+        whites = ps[True]
+        p: pieces.Piece
+        white_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), whites))
+        blacks = ps[False]
+        black_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), blacks))
+
+        if white_checkmate or black_checkmate:
+            return True
+
+        return False
+
+    def get_value(self, color: bool = None) -> int:
+        total = 0
+
+        if color is None:
+            for v in self.get_pieces().values():
+                for p in v:
+                    total += p.value
+
+        else:
+            for p in self.get_pieces()[color]:
+                total += p.value
+
+        return total
+
+    def evaluate_positions(self, color):
+        c = self.get_value(color)
+        oc = self.get_value(not color)
+        return c / (c + oc)

@@ -13,8 +13,8 @@ class ChessTest(unittest.TestCase):
         self.assertIsNotNone(piece)
         self.assertIsNotNone(piece2)
 
-        self.assertEqual({(8, 8)}, piece.get_valid_moves(board))
-        self.assertEqual({(4, 5), (4, 4), (4, 3), (5, 3), (6, 5), (6, 3)}, piece2.get_valid_moves(board))
+        self.assertEqual({(8, 8)}, piece.get_valid_moves(_board))
+        self.assertEqual({(4, 5), (4, 4), (4, 3), (5, 3), (6, 5), (6, 3)}, piece2.get_valid_moves(_board))
 
     def test_valid_moves_filter_2(self):
         _board = board.Board((8, 8), None, None, fen='3qkbnr/3pp2p/6Q1/8/4B/8/8/8 w')
@@ -34,7 +34,12 @@ class ChessTest(unittest.TestCase):
         pcs = _board.get_pieces()[queen.color]
         self.assertEqual(2, len(pcs))
 
-        self.assertEqual({(7, 6)}, pawn.get_valid_moves(board, no_turn=True))
+        self.assertEqual({(7, 6)}, pawn.get_valid_moves(_board, no_turn=True))
+
+    def test_valid_moves_filter_3(self):
+        _board = board.Board(fen='3pkp2/3p1Q2/8/3B3/8/8/8/8 b')
+        king = _board.get_king(False)
+        self.assertEqual(set(), king.get_valid_moves(_board))
 
     def test_fen(self):
         f = 'k7/7P/3b4/8/4K3/8/8/8 w'
@@ -45,7 +50,7 @@ class ChessTest(unittest.TestCase):
         _board = board.Board()
 
         fen1 = _board.exportFEN()
-        _board.get_piece_at(5, 2).get_valid_moves(board)
+        _board.get_piece_at(5, 2).get_valid_moves(_board)
         fen2 = _board.exportFEN()
 
         self.assertEqual(fen1, fen2)
