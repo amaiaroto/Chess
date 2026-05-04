@@ -205,6 +205,7 @@ while True:
                                  (255, 0, 0), (200, 0, 0))
             back_button.draw(screen)
             board.draw()
+
             if board.checkmate():
                 checkmate = True
 

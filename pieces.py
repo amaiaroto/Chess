@@ -23,6 +23,11 @@ values = {
 }
 
 def flatten(*i) -> set:
+    """
+
+    :param i: The iterable being flattened
+    :return: The flattened iterable
+    """
     r = set()
 
     for it in i:

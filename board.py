@@ -28,15 +28,6 @@ class Board:
         self.pieces = self.get_pieces()
         self.history: list[undo_move.UndoMove] = []
 
-    """add fields to store the left x, top y, cell width and cell height
-    then implement a method that gets as input the mouse coordinates (every time you click left button)
-    and returns the coordinates of the clicked cell.
-    
-    implement a method in board that receives the cell coordinates as input and returns the valid moves from that location.
-    
-    change the color (turn) in the board to a boolean as in pieces.
-    """
-
     @staticmethod
     def get_letter_from_index(index) -> str:
         return chr(96 + index)

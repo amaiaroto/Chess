@@ -10,6 +10,14 @@ TODOs:
         # 6. add turn indicator
         # 7. add counts of taken pieces
         # 8. add turn info in fen (done)
+
+
+5/3/2026
+make 0 & 1 bots. (see below)
+add difficulty selection.
+
+
+
 4/30
 fixed valid moves of king
 added test for that
