@@ -1,13 +1,13 @@
+import base_bot
 import pieces
 import undo_move
-from main import player_color
 
 toggle = False
 
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int] = (8, 8), screen=None, pg=None,
-                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w"):
+                 fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w", color=True, bot=None):
         self.valid = None
         self.picked_piece: pieces.Piece
         self.picked_piece = None
@@ -27,6 +27,8 @@ class Board:
         self.won = self.has_won()  # None, white, or black (true or false)
         self.pieces = self.get_pieces()
         self.history: list[undo_move.UndoMove] = []
+        self.player_color = color
+        self.bot: base_bot.Bot = bot(self, not self.player_color) if bot is not None else None
 
     @staticmethod
     def get_letter_from_index(index) -> str:
@@ -243,15 +245,34 @@ class Board:
 
                     self.screen.blit(icon, (square_size * c + 3, square_size * r - 8))
 
-                self.moves_made.extend(self.valid if self.valid is not None else [])
+                # TODO: remove man, make sure that your history is based on the undo object
+                # self.moves_made.extend(self.valid if self.valid is not None else [])
 
                 if self.valid is not None and len(self.valid) > 0:
                     for p in self.valid:
-                        if p.color == player_color:
-                            center = self.get_cell_center(*p)
-                            self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
+                        # TODO: check this one man!
+                        # if self.get_piece_at(*p).color == self.player_color:
+                        center = self.get_cell_center(*p)
+                        self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
 
     def handle_click(self, x, y):
+        """
+        Cases:
+
+        1 = piece is not None
+        2 = we have valid moves (picked_piece is the piece of the valid moves)
+
+        No, No: do nothing
+        No, Yes: if the clicked place is one of the valid moves, go there, then have the bot do a move
+        Yes, No: get the valid moves of piece and set picked_piece to piece
+        Yes, Yes:
+                if we clicked again picked_piece, reset valid moves to []
+                if we clicked on a different piece (different from picked_piece) then recompute the valid moves and set picked_piece to the clicked =piece
+                otherwise we clicked on a valid move so move there
+        :param x:
+        :param y:
+        :return:
+        """
         c, r = self.get_cell(x, y)
         piece: pieces.Piece = self.get_piece_at(c, r)
         has_valid_moves = self.valid is not None and len(self.valid) > 0
@@ -262,6 +283,8 @@ class Board:
         elif piece is None and has_valid_moves:
             if (c, r) in self.valid:
                 self.go_to(c, r, self.picked_piece)
+                self.bot.make_move()
+
 
             self.valid = []
             self.picked_piece = None
@@ -282,6 +305,9 @@ class Board:
             else:
                 self.go_to(c, r, self.picked_piece)
                 self.valid = []
+                self.bot.make_move()
+                #after this we should trigger the other player
+
 
     def has_won(self) -> bool | None:
         for color, jail in self.jail.items():

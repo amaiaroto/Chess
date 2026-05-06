@@ -4,9 +4,7 @@ import sys
 from contextlib import redirect_stdout
 from board import Board
 from enum import Enum
-
-bg_color = (183, 255, 183)
-title_screen = True
+from bots import bot0
 
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
@@ -14,6 +12,8 @@ with redirect_stdout(open(os.devnull, 'w')):
 pg.init()
 pg.mixer.init()
 
+bg_color = (183, 255, 183)
+title_screen = True
 rect = pg.rect.Rect(0, 0, 0, 0)
 sound = pg.mixer.Sound('click_sfx.mp3')
 screen: pg.Surface = pg.display.set_mode((800, 800))
@@ -25,9 +25,11 @@ pg.display.set_caption('Chess — Play chess against a smart AI!')
 
 class State(Enum):
     # -state field that is an enumeration of 4 values: init, game, exit, checkmate
-    # -components list: this contains the list of graphical elements that need to be drawn in the current state
+    # -components list: this contains the list of graphical elements that need to \
+    # be drawn in the current state
     #
-    # add an init method that sets the state to init and adds the play/quit and horse graphical elements to the component list
+    # add an init method that sets the state to init and adds the \
+    # play/quit and horse graphical elements to the component list
     #
     # add a draw method that loops over the list of components and draws them.
     state = Enum('state', [("value_1", 1), ("value_2", 2)])
@@ -90,8 +92,6 @@ class Button:
 
 class Popup:
     def __init__(self, color, surface):
-        global checkmate
-
         width = 500
         height = 300
         pg.draw.rect(surface, (57, 57, 58),
@@ -116,13 +116,12 @@ class Popup:
             exit_chess()
 
         if ok_button.clicked():
-            checkmate = False
+            ...
 
 
 fen = Board.starting_position()
 
 board = Board()
-checkmate = bool
 player_color = True
 
 
@@ -133,11 +132,10 @@ def exit_chess(code: int | str = 0):
 
 
 def start_chess() -> bool:
-    global title_screen, board, checkmate
+    global board, title_screen
 
     title_screen = False
-    board = Board((8, 8), screen, pg, fen)
-    checkmate = False
+    board = Board((8, 8), screen, pg, fen, player_color, bot0.Bot0)
 
     return title_screen
 
@@ -176,13 +174,20 @@ while True:
                                  (0, 255, 0), (0, 205, 0))
             quit_button = Button(305, 525, 190, 100, 'QUIT', button_font,
                                  (255, 0, 0), (205, 0, 0))
+            white_color_button = Button(20, 20, 50, 50, '', button_font,
+                                        (255, 255, 255), (250, 250, 250))
+            black_color_button = Button(80, 20, 50, 50, '', button_font,
+                                        (0, 0, 0), (5, 5, 5))
+
             play_button.draw(screen)
             quit_button.draw(screen)
+            white_color_button.draw(screen)
+            black_color_button.draw(screen)
 
             if play_button.clicked() or kb.is_pressed('enter'):
-
                 state = board.state
                 start_chess()
+
             elif quit_button.clicked():
                 exit_chess()
 
@@ -207,9 +212,6 @@ while True:
             board.draw()
 
             if board.checkmate():
-                checkmate = True
-
-            if checkmate:
                 Popup(not board.turn, screen)
 
             if back_button.clicked() or kb.is_pressed('esc'):
