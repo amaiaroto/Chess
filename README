@@ -11,6 +11,14 @@ TODOs:
         # 7. add counts of taken pieces
         # 8. add turn info in fen (done)
 
+5/9
+finish level one bot
+-DONE
+fix filter
+-king or knight
+
+5/7/26
+level one bot makes the move that gives it the most score
 
 5/3/2026
 make 0 & 1 bots. (see below)

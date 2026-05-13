@@ -267,7 +267,8 @@ class Board:
         Yes, No: get the valid moves of piece and set picked_piece to piece
         Yes, Yes:
                 if we clicked again picked_piece, reset valid moves to []
-                if we clicked on a different piece (different from picked_piece) then recompute the valid moves and set picked_piece to the clicked =piece
+                if we clicked on a different piece (different from picked_piece) -
+                then recompute the valid moves and set picked_piece to the clicked =piece
                 otherwise we clicked on a valid move so move there
         :param x:
         :param y:
@@ -284,7 +285,6 @@ class Board:
             if (c, r) in self.valid:
                 self.go_to(c, r, self.picked_piece)
                 self.bot.make_move()
-
 
             self.valid = []
             self.picked_piece = None
@@ -306,8 +306,6 @@ class Board:
                 self.go_to(c, r, self.picked_piece)
                 self.valid = []
                 self.bot.make_move()
-                #after this we should trigger the other player
-
 
     def has_won(self) -> bool | None:
         for color, jail in self.jail.items():
@@ -377,9 +375,10 @@ class Board:
 
     def checkmate(self):
         ps = self.get_pieces()
+
         whites = ps[True]
-        p: pieces.Piece
         white_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), whites))
+
         blacks = ps[False]
         black_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), blacks))
 
@@ -402,7 +401,24 @@ class Board:
 
         return total
 
+    def get_pieces_under_threat(self, color: bool) -> set:
+        pieces = self.get_pieces()[color]
+
+        other_pieces = self.get_pieces()[not color]
+        opponent_vm = [p.get_valid_moves(self, no_turn=True) for p in other_pieces]
+        # TODO: flatten opponent_vm
+        pieces_threatened = {p for p in pieces if p.get_pos() in opponent_vm}
+
+        return pieces_threatened
+
     def evaluate_positions(self, color):
-        c = self.get_value(color)
+        threatened_pieces = self.get_pieces_under_threat(color)
+        maxvalue = 0
+        for tp in threatened_pieces:
+            if tp.value > maxvalue:
+                maxvalue = tp.value
+
+        c = self.get_value(color) - maxvalue
         oc = self.get_value(not color)
+
         return c / (c + oc)

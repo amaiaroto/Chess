@@ -1,5 +1,6 @@
 import unittest
 import board
+from bots import bot1
 from pieces import flatten
 
 
@@ -66,6 +67,13 @@ class ChessTest(unittest.TestCase):
         self.assertEqual(len(flatten(pcb)), len(flatten(pc)))
 
         _board.undo_go_to(undo)
+
+    def test_bot1(self):
+        _board = board.Board(fen='rnbqkbnr/ppp1pppp/3p4/1B6/4P/3/8/PPPP1PPP/RNBQK1NR b', bot=bot1.Bot1)
+
+        _board.bot.make_move()
+        print(_board.exportFEN())
+        self.assertNotEqual(_board.exportFEN(), 'rnb1kbnr/ppppqppp/3p4/1B6/8/8/PPPP1PPP w')
 
 
 if __name__ == '__main__':

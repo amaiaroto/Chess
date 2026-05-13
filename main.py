@@ -5,6 +5,7 @@ from contextlib import redirect_stdout
 from board import Board
 from enum import Enum
 from bots import bot0
+from bots import bot1
 
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
@@ -16,7 +17,7 @@ bg_color = (183, 255, 183)
 title_screen = True
 rect = pg.rect.Rect(0, 0, 0, 0)
 sound = pg.mixer.Sound('click_sfx.mp3')
-screen: pg.Surface = pg.display.set_mode((800, 800))
+screen: pg.Surface = pg.display.set_mode((800, 800), pg.RESIZABLE)
 button_font = pg.font.Font('NotoSansSymbols-Bold.ttf', 72)
 button_font2 = pg.font.SysFont('Segoe UI Symbol', 52)
 pg.display.set_icon(pg.image.load('chess-icon.png'))
@@ -135,7 +136,7 @@ def start_chess() -> bool:
     global board, title_screen
 
     title_screen = False
-    board = Board((8, 8), screen, pg, fen, player_color, bot0.Bot0)
+    board = Board((8, 8), screen, pg, fen, player_color, bot1.Bot1)
 
     return title_screen
 
@@ -190,6 +191,12 @@ while True:
 
             elif quit_button.clicked():
                 exit_chess()
+
+            elif white_color_button.clicked():
+                player_color = True
+
+            elif black_color_button.clicked():
+                player_color = False
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
             for t in chars:
