@@ -1,5 +1,6 @@
 import unittest
 import board
+import pieces
 from bots import bot1
 from pieces import flatten
 
@@ -75,6 +76,27 @@ class ChessTest(unittest.TestCase):
         print(_board.exportFEN())
         self.assertNotEqual(_board.exportFEN(), 'rnb1kbnr/ppppqppp/3p4/1B6/8/8/PPPP1PPP w')
 
+    def test_flatten(self):
+        iterable = [
+            [(6, 2), (1, 7), (9, 0), (2, 5)],
+            [(1, 2), (7, 2), (6, 7)],
+            [(9, 5), (6, 3), [(9, 1), (5, 6), (7, 2)]],
+            [(2, 3), (6, 3), (1, 3), (8, 6), (8, 6)],
+            [(2, 5), (5, 9), (0, 2)],
+            [(2, 5), (5, 9), (0, 2)]
+        ]
+
+        flattened_iterable = pieces.flatten(iterable)
+
+        self.assertEqual(type(flattened_iterable), set)
+        self.assertEqual(len([t for t in flattened_iterable if isinstance(t, tuple)]), 16)
+        self.assertEqual(len(flattened_iterable), 16)
+
+        flattened_iterable = pieces.flatten(iterable, keep_duplicates=True)
+
+        self.assertEqual(type(flattened_iterable), list)
+        self.assertEqual(len([t for t in flattened_iterable if isinstance(t, tuple)]), 23)
+        self.assertEqual(len(flattened_iterable), 23)
 
 if __name__ == '__main__':
     unittest.main()

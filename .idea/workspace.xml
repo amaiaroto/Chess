@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="5/5 Changes">
-      <change afterPath="$PROJECT_DIR$/bots/bot1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="changes">
+      <change afterPath="$PROJECT_DIR$/preferences.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pieces.py" beforeDir="false" afterPath="$PROJECT_DIR$/pieces.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +85,9 @@
     "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
     "Python tests.Python tests for tests.ChessTest.executor": "Run",
     "Python tests.Python tests for tests.ChessTest.test_bot1.executor": "Debug",
+    "Python tests.Python tests for tests.ChessTest.test_flatten.executor": "Run",
+    "Python tests.Python tests for tests.ChessTest.test_undo_move.executor": "Run",
+    "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter.executor": "Debug",
     "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3.executor": "Run",
     "Python tests.Python tests in ChessTest.py.executor": "Run",
     "Python.Board.executor": "Run",
@@ -116,7 +119,7 @@
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for tests.ChessTest.test_bot1">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -185,7 +188,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for tests.ChessTest.test_valid_moves_filter_2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for tests.ChessTest.test_flatten" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -196,11 +199,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests.ChessTest.test_valid_moves_filter_2&quot;" />
+      <option name="_new_target" value="&quot;tests.ChessTest.test_flatten&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for tests.ChessTest.test_valid_moves_filter_3" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for tests.ChessTest.test_undo_move" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -211,11 +214,11 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests.ChessTest.test_valid_moves_filter_3&quot;" />
+      <option name="_new_target" value="&quot;tests.ChessTest.test_undo_move&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in tests.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for tests.ChessTest.test_valid_moves_filter" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -226,25 +229,25 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="_new_target" value="&quot;tests.ChessTest.test_valid_moves_filter&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_flatten" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_undo_move" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter" />
       <item itemvalue="Python tests.Python tests for tests.ChessTest.test_bot1" />
       <item itemvalue="Python tests.Python tests for tests.ChessTest" />
-      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_2" />
-      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3" />
-      <item itemvalue="Python tests.Python tests in tests.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_bot1" />
+        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_undo_move" />
+        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_flatten" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest" />
-        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3" />
-        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_2" />
-        <item itemvalue="Python tests.Python tests in tests.py" />
       </list>
     </recent_temporary>
   </component>
@@ -262,14 +265,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771247068679</updated>
-    </task>
-    <task id="LOCAL-00026" summary="nothing (fr)">
-      <option name="closed" value="true" />
-      <created>1775003025785</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1775003025785</updated>
     </task>
     <task id="LOCAL-00027" summary="nothing (fr)">
       <option name="closed" value="true" />
@@ -655,7 +650,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778030804147</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="changes">
+      <option name="closed" value="true" />
+      <created>1778636646221</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1778636646221</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -670,7 +673,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed" />
     <MESSAGE value="fixedd" />
     <MESSAGE value="vfixedd" />
     <MESSAGE value="fix filtering moves" />
@@ -695,7 +697,8 @@
     <MESSAGE value="a lot of stuff..." />
     <MESSAGE value="5/3 Changes" />
     <MESSAGE value="5/5 Changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="5/5 Changes" />
+    <MESSAGE value="changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -710,7 +713,7 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/bots/bot1.py</url>
           <line>13</line>
-          <option name="timeStamp" value="48" />
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -723,6 +726,7 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="tests">
+        <watch expression="self.exportFEN()" language="Python" />
         <watch expression="self" language="Python" />
         <watch expression="board.exportFEN()" language="Python" />
         <watch expression="self.exportFEN()" language="Python" />

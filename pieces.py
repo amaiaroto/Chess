@@ -16,32 +16,33 @@ piece_icons: dict[str, str] = {
     'w': '🜲'
 }
 
-values = {
-    'p': 1,
-    'b': 3,
-    'n': 3
-}
 
-def flatten(*i) -> set:
+def flatten(*iterable, keep_duplicates: bool = False) -> set | list:
     """
-
-    :param i: The iterable being flattened
+    :param keep_duplicates:
+    :param iterable: The iterable being flattened
     :return: The flattened iterable
     """
-    r = set()
+    result = []
+    stack = [*iterable]
 
-    for it in i:
-        if it is not None:
+    while len(stack) > 0:
+        p = stack.pop(0)
+
+        if isinstance(p, tuple):
+            result.append(p)
+
+        else:
             try:
-                it.__iter__()
-                if type(it) != tuple:
-                    r.update(flatten(*it))
-                else:
-                    r.add(it)
-            except AttributeError:
-                r.add(it)
+                stack.extend(p)
 
-    return r
+            except:
+                result.append(p)
+
+    if keep_duplicates:
+        return result
+
+    return set(result)
 
 
 class PieceError(BaseException):

@@ -11,6 +11,20 @@ TODOs:
         # 7. add counts of taken pieces
         # 8. add turn info in fen (done)
 
+5/14
+modified board.go_to to move the piece (before the piece was moved only in non lw mode)
+this fixed issue with get threatened pieces.
+noted that board has row 0 instead of just 1-8. check if that is caused by the undo move
+noted also that in bot1 when black queen moved to 4,7 we should have only the queen threatened but instead we get also 2 pawns.
+this is because the white queen is in a wrong position and also the board is messed up with white piece in rows 1 and 0 instead of 1 and 2.
+
+=>add an assertion in all places that modify the board.state to make sure that the board has no 0 key
+=> add test for threatened piece detection
+=>fix test for undo move that does not really test the undo
+
+=>after all of that re-debug the bot1 test
+
+
 5/9
 finish level one bot
 -DONE

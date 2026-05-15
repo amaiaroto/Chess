@@ -137,7 +137,7 @@ class Board:
         move_info.sp.go_to(*move_info.sp_pos)
         c, r = move_info.sp_pos
         piece = move_info.sp
-
+        piece.go_to(c, r)
         self.state[r][self.get_letter_from_index(c)] = piece
         eaten_piece = move_info.piece_at_target
         self.state[move_info.pos_of_piece_at_target[1]][
@@ -169,16 +169,14 @@ class Board:
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
         self.state[r][Board.get_letter_from_index(c)] = piece
 
+        piece.go_to(c, r)
+
         if not lw:
             if eaten_piece is not None:
                 jail_for_color = self.jail[eaten_piece.color]
                 count_of_eaten_piece = jail_for_color.get(eaten_piece.get_name(), 0)
                 jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece + 1
                 self.won = self.has_won()
-
-            # self.history.append(move_info)
-
-            piece.go_to(c, r)
 
             self.turn = not self.turn
 
@@ -245,13 +243,8 @@ class Board:
 
                     self.screen.blit(icon, (square_size * c + 3, square_size * r - 8))
 
-                # TODO: remove man, make sure that your history is based on the undo object
-                # self.moves_made.extend(self.valid if self.valid is not None else [])
-
                 if self.valid is not None and len(self.valid) > 0:
                     for p in self.valid:
-                        # TODO: check this one man!
-                        # if self.get_piece_at(*p).color == self.player_color:
                         center = self.get_cell_center(*p)
                         self.pg.draw.circle(self.screen, (180, 180, 180), center, self.cw // 3)
 
@@ -402,12 +395,13 @@ class Board:
         return total
 
     def get_pieces_under_threat(self, color: bool) -> set:
-        pieces = self.get_pieces()[color]
+        color_pieces = self.get_pieces()[color]
 
         other_pieces = self.get_pieces()[not color]
-        opponent_vm = [p.get_valid_moves(self, no_turn=True) for p in other_pieces]
-        # TODO: flatten opponent_vm
-        pieces_threatened = {p for p in pieces if p.get_pos() in opponent_vm}
+
+        opponent_vm = pieces.flatten([p.get_valid_moves(self, no_turn=True) for p in other_pieces])
+
+        pieces_threatened = {p for p in color_pieces if p.get_pos() in opponent_vm}
 
         return pieces_threatened
 

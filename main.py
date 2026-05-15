@@ -6,6 +6,7 @@ from board import Board
 from enum import Enum
 from bots import bot0
 from bots import bot1
+import json
 
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
@@ -121,9 +122,10 @@ class Popup:
 
 
 fen = Board.starting_position()
-
 board = Board()
-player_color = True
+
+with open('memory.json') as preferences:
+    preferences = json.load(preferences)
 
 
 def exit_chess(code: int | str = 0):
@@ -133,10 +135,13 @@ def exit_chess(code: int | str = 0):
 
 
 def start_chess() -> bool:
-    global board, title_screen
+    global board, title_screen, preferences
+
+    with open('memory.json') as preference:
+        json.dump(preference, preferences)
 
     title_screen = False
-    board = Board((8, 8), screen, pg, fen, player_color, bot1.Bot1)
+    board = Board((8, 8), screen, pg, fen, preferences['color'], [bot0.Bot0, bot1.Bot1][preferences['bot']])
 
     return title_screen
 
@@ -193,10 +198,10 @@ while True:
                 exit_chess()
 
             elif white_color_button.clicked():
-                player_color = True
+                preferences['color'] = True
 
             elif black_color_button.clicked():
-                player_color = False
+                preferences['color'] = False
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
             for t in chars:
