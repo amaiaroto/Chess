@@ -1,12 +1,20 @@
-import keyboard as kb
 import os
 import sys
 from contextlib import redirect_stdout
-from board import Board
 from enum import Enum
+
+import keyboard as kb
+
+import pieces
+from board import Board
 from bots import bot0
 from bots import bot1
-import json
+
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+logger.debug('LOGGING INITIATED')
 
 with redirect_stdout(open(os.devnull, 'w')):
     import pygame as pg
@@ -92,40 +100,43 @@ class Button:
         return result
 
 
+checkmate = True
+
+
 class Popup:
     def __init__(self, color, surface):
-        width = 500
-        height = 300
-        pg.draw.rect(surface, (57, 57, 58),
-                     pg.Rect(surface.get_width() // 2 - width // 2, surface.get_height() // 2 - height // 2, width,
-                             height),
-                     border_radius=10)
-        text = pg.font.Font(None, 37).render(f'Checkmate!\n{ {True: "White", False: "Black"}[color]} wins!', True,
-                                             (245, 245, 245))
-        ok_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 2 - 30, width // 2,
-                           height // 4,
-                           "OK", button_font, (0, 255, 0), (0, 205, 0))
-        exit_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 1.70 - 15, width // 2,
-                             height // 4,
-                             "EXIT", button_font, (255, 0, 0), (205, 0, 0))
+        global checkmate
+        if checkmate:
+            width = 500
+            height = 300
+            pg.draw.rect(surface, (57, 57, 58),
+                         pg.Rect(surface.get_width() // 2 - width // 2, surface.get_height() // 2 - height // 2, width,
+                                 height),
+                         border_radius=10)
+            text = pg.font.Font(None, 37).render(f'Checkmate!\n{ {True: "White", False: "Black"}[color]} wins!', True,
+                                                 (245, 245, 245))
+            ok_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 2 - 30, width // 2,
+                               height // 4,
+                               "OK", button_font, (0, 255, 0), (0, 205, 0))
+            exit_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 1.70 - 15, width // 2,
+                                 height // 4,
+                                 "EXIT", button_font, (255, 0, 0), (205, 0, 0))
 
-        surface.blit(text,
-                     (surface.get_width() // 2 - text.get_width() // 2, surface.get_height() // 2 - height // 2.5))
-        ok_button.draw(surface)
-        exit_button.draw(surface)
+            surface.blit(text,
+                         (surface.get_width() // 2 - text.get_width() // 2, surface.get_height() // 2 - height // 2.5))
+            ok_button.draw(surface)
+            exit_button.draw(surface)
 
-        if exit_button.clicked():
-            exit_chess()
+            if exit_button.clicked():
+                exit_chess()
 
-        if ok_button.clicked():
-            ...
+            if ok_button.clicked():
+                checkmate = False
 
 
 fen = Board.starting_position()
 board = Board()
-
-with open('memory.json') as preferences:
-    preferences = json.load(preferences)
+player_color = True
 
 
 def exit_chess(code: int | str = 0):
@@ -135,13 +146,11 @@ def exit_chess(code: int | str = 0):
 
 
 def start_chess() -> bool:
-    global board, title_screen, preferences
-
-    with open('memory.json') as preference:
-        json.dump(preference, preferences)
+    global board, title_screen, player_color, checkmate
 
     title_screen = False
-    board = Board((8, 8), screen, pg, fen, preferences['color'], [bot0.Bot0, bot1.Bot1][preferences['bot']])
+    checkmate = True
+    board = Board((8, 8), screen, pg, fen, player_color, [bot0.Bot0, bot1.Bot1][1])
 
     return title_screen
 
@@ -167,7 +176,7 @@ while True:
                 exit_chess()
 
             if kb.is_pressed('shift+alt+b'):
-                board.printASCII()
+                print(board.exportFEN())
 
             text = pg.font.Font('DejaVuSans.ttf', 138)
 
@@ -198,10 +207,10 @@ while True:
                 exit_chess()
 
             elif white_color_button.clicked():
-                preferences['color'] = True
+                player_color = True
 
             elif black_color_button.clicked():
-                preferences['color'] = False
+                player_color = False
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
             for t in chars:
@@ -216,12 +225,24 @@ while True:
         else:
 
             if kb.is_pressed('shift+alt+b'):
-                board.printASCII()
+                print(board.exportFEN())
 
             back_button = Button(10, 10, 53, 53, '\u21A9[↩]', button_font2,
                                  (255, 0, 0), (200, 0, 0))
             back_button.draw(screen)
             board.draw()
+            jail = board.get_jail()
+            font = pg.font.SysFont('Segoe UI Symbol', 50)
+
+            pos = (80, 0)
+            screen.blit(
+                font.render(' '.join([pieces.piece_icons[i] for i in jail[True].keys()]), True, (255, 255, 255)),
+                pos)
+
+            pos = (80, 720)
+            screen.blit(
+                font.render(' '.join([pieces.piece_icons[i] for i in jail[False]]), True, (0, 0, 0)),
+                pos)
 
             if board.checkmate():
                 Popup(not board.turn, screen)

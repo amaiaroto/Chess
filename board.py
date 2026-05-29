@@ -1,14 +1,18 @@
 import base_bot
 import pieces
 import undo_move
+import logging
 
 toggle = False
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class Board:
     def __init__(self, grid_cx_ry: tuple[int, int] = (8, 8), screen=None, pg=None,
                  fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w", color=True, bot=None):
         self.valid = None
+        self.square_size = 0
         self.picked_piece: pieces.Piece
         self.picked_piece = None
         self.black_color = (80, 43, 17)
@@ -25,8 +29,6 @@ class Board:
         self.raw_fen = fen
         self.jail = {True: {}, False: {}}
         self.won = self.has_won()  # None, white, or black (true or false)
-        self.pieces = self.get_pieces()
-        self.history: list[undo_move.UndoMove] = []
         self.player_color = color
         self.bot: base_bot.Bot = bot(self, not self.player_color) if bot is not None else None
 
@@ -53,12 +55,14 @@ class Board:
                 if current_row is None:
                     current_row = {Board.get_letter_from_index(k): None for k in range(1, 9)}
                     state[rp] = current_row
+                    assert 9 > rp > 0
                 if col.isdigit():
                     cp += int(col)
                 else:
                     current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col=cp, row=rp)
                     cp += 1
             rp -= 1
+
         return state, {'w': True, 'b': False}[turn]
 
     def printASCII(self) -> str:
@@ -130,19 +134,34 @@ class Board:
         #     {k: v for k, v in self.state.items()}[alphabet_real[(y - self.by) // self.ch]]]
 
     def modify_pos(self, c, r, piece) -> dict:
+        """
+        Replace a square with a new piece
+        :param c: column
+        :param r: row
+        :param piece: the piece that replaces the old one
+        :return: the new state
+        """
         self.state[r][self.get_letter_from_index(c)] = piece
+        assert 9 < r > 0 and self.get_letter_from_index(c) in list('abcdefgh')
         return self.state
 
     def undo_go_to(self, move_info: undo_move.UndoMove):
+        """
+        Undoes the move that was made
+        :param move_info: information of move to undo
+        :return: None
+        """
         move_info.sp.go_to(*move_info.sp_pos)
         c, r = move_info.sp_pos
         piece = move_info.sp
         pp = move_info.pp
         piece.go_to(c, r)
         self.state[r][self.get_letter_from_index(c)] = piece
+        assert 9 > r > 0
         eaten_piece = move_info.piece_at_target
         self.state[move_info.pos_of_piece_at_target[1]][
             Board.get_letter_from_index(move_info.pos_of_piece_at_target[0])] = eaten_piece
+        assert 9 > move_info.pos_of_piece_at_target[1] > 0
 
         if not move_info.lw:
             if eaten_piece is not None:
@@ -157,7 +176,7 @@ class Board:
         :param c: c
         :param r: r
         :param lw: lightweight
-        :param piece: this piece is going to be moved from piece.row/col to c,r
+        :param piece: this piece is going to be moved from piece.row/col to c, r
         :return:
         """
 
@@ -165,13 +184,17 @@ class Board:
 
         assert eaten_piece is None or eaten_piece.color != piece.color
         assert piece is not None
-        pp = isinstance(piece, pieces.Pawn)
+        pp = isinstance(piece, pieces.Pawn) and (r == 1 or r == 8)
 
-        move_info = undo_move.UndoMove(self, piece, (c, r), lw)
+        move_info = undo_move.UndoMove(self, piece, (c, r), lw, pp)
+        assert 9 > piece.row > 0
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
+        assert 9 > r > 0
         self.state[r][Board.get_letter_from_index(c)] = piece
 
         piece.go_to(c, r)
+        if pp:
+            self.modify_pos(c, r, pieces.Queen('q', c, r))
 
         if not lw:
             if eaten_piece is not None:
@@ -218,6 +241,7 @@ class Board:
 
     def draw(self):
         square_size = min(self.screen.get_width(), self.screen.get_height()) // (max(self.rows, self.columns) + 2)
+        self.square_size = square_size
 
         for c in range(1, self.columns + 1):
             lc = Board.get_letter_from_index(c)
@@ -329,7 +353,8 @@ class Board:
 
         return None
 
-    def filter_moves_if_opponent_can_reach(self, piece: pieces.Piece, pos: tuple[int, int], valid_moves: set | None):
+    def filter_moves_if_opponent_can_reach(self, piece: pieces.Piece,
+                                           pos: tuple[int, int], valid_moves: set | None):
         """
         edit valid_moves and remove illegal moves
         checks whether there exists an opponent piece that can reach the pos
@@ -409,12 +434,35 @@ class Board:
 
     def evaluate_positions(self, color):
         threatened_pieces = self.get_pieces_under_threat(color)
-        maxvalue = 0
-        for tp in threatened_pieces:
-            if tp.value > maxvalue:
-                maxvalue = tp.value
+
+        if threatened_pieces:
+            maxtp = max(threatened_pieces, key=lambda x: x.value)
+            maxvalue = maxtp.value
+
+        else:
+            maxvalue = 0
 
         c = self.get_value(color) - maxvalue
         oc = self.get_value(not color)
+        print(f"{c} / ({c}+{oc}) = {c / (c + oc)}")
 
         return c / (c + oc)
+
+    def check_consistency(self):
+        """
+        Checks if state matches the pieces on the board
+        """
+
+        ps = pieces.flatten(self.get_pieces().values())
+
+        for p in ps:
+            r = p.row
+            c = p.col
+
+            assert self.state[r][self.get_letter_from_index(c)] == p
+
+    def get_jail(self):
+        return self.jail
+
+    def get_square_size(self):
+        return self.square_size

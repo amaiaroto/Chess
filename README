@@ -1,15 +1,29 @@
 A little Chess Application with an easter egg
 
+LEG={@: ?column, #: ?row, 1-8: rows, a-g: columns}
 
 TODOs:
-        # 1. Check for STALEMATE & CHECKMATE, INSUFFICIENT MATERIAL, 50-MOVE, THREEFOLD REPETITION
-        # 2. Bot
+        # 1. Check for STALEMATE & CHECKMATE, INSUFFICIENT MATERIAL, 50-MOVE, THREEFOLD REPETITION (no.)
+        # 2. Bot (0, 1 done)
         # 3. Castling King-Side & Queen-Side
         # 4. En passant
         # 5. tests (done, continue adding)
         # 6. add turn indicator
-        # 7. add counts of taken pieces
+        # 7. add counts of taken pieces (done)
         # 8. add turn info in fen (done)
+
+5/28
+DEADLINE: 5/30 Sat (next session (work at home) )
+1 > Add pawn stopping on @-8
+2 > Add Pawn Promotion
+3 > Add Castling King Side & Queen Side (King Side first)
+
+5/26
+change print in eval board pos to logger.debug
+check how to enable the logger during tests
+fix issue with valid moves for pawn that goes off board
+
+
 
 5/14
 modified board.go_to to move the piece (before the piece was moved only in non lw mode)

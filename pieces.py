@@ -66,6 +66,10 @@ class Piece:
         return self.color
 
     def get_name(self):
+        """
+        Gets the letter of the piece
+        :return: Letter of piece
+        """
         return self.piece if not self.win else 'W' if self.color else 'w'
 
     @staticmethod
@@ -187,6 +191,9 @@ class Piece:
     def get_pos(self) -> tuple[int, int]:
         return self.col, self.row
 
+    def __str__(self):
+        return f"{self.get_name()} {self.get_pos()}"
+
 
 class Pawn(Piece):
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -261,7 +268,7 @@ class Knight(Piece):
                  (self.col - 2, self.row + 1), (self.col - 1, self.row - 2)]
 
         for move in moves:
-            if board.is_valid_cell(*move) and self.color == board.turn:
+            if board.is_valid_cell(*move) and (self.color == board.turn or no_turn):
                 if board.get_piece_at(*move) is not None:
                     if board.get_piece_at(*move).color != self.color:
                         valid_moves.add(move)
@@ -347,8 +354,6 @@ class King(Piece):
             h = self.line_movement(1, -1, board, 0, self.color)
 
             o = flatten(a, b, c, d, e, f, g, h)
-
-            opp_pieces = board.pieces[not self.color]
 
             if _filter:
                 # removes the king's valid moves that/are reachable by opponent pieces

@@ -1,3 +1,4 @@
+import logging
 import unittest
 import board
 import pieces
@@ -6,6 +7,10 @@ from pieces import flatten
 
 
 class ChessTest(unittest.TestCase):
+    @staticmethod
+    def test_startup():
+        board.Board()
+
     def test_valid_moves_filter(self):
         _board = board.Board((8, 8), None, None, fen='k7/7P/3b4/8/4K3/8/8/8 w')
 
@@ -63,14 +68,15 @@ class ChessTest(unittest.TestCase):
 
         pcb = _board.get_pieces()
         undo = _board.go_to(5, 4, p, lw=True)
-        pc = flatten(_board.get_pieces())
+        pcw = flatten(_board.get_pieces())
 
-        self.assertEqual(len(flatten(pcb)), len(flatten(pc)))
+        self.assertEqual(len(flatten(pcb)), len(flatten(pcw)))
 
         _board.undo_go_to(undo)
+        _board.check_consistency()
 
     def test_bot1(self):
-        _board = board.Board(fen='rnbqkbnr/ppp1pppp/3p4/1B6/4P/3/8/PPPP1PPP/RNBQK1NR b', bot=bot1.Bot1)
+        _board = board.Board(fen='rnbqkbnr/ppp1pppp/3p4/1B6/4P3/8/PPPP1PPP/RNBQK1NR b', bot=bot1.Bot1)
 
         _board.bot.make_move()
         print(_board.exportFEN())
@@ -98,5 +104,85 @@ class ChessTest(unittest.TestCase):
         self.assertEqual(len([t for t in flattened_iterable if isinstance(t, tuple)]), 23)
         self.assertEqual(len(flattened_iterable), 23)
 
+    def test_bot1_2(self):
+        _board = board.Board(fen='r1bqkbnr/1ppppppp/3N4/p1n5/8/8/PPPPPPPP/RNBQKB1R b', bot=bot1.Bot1)
+
+        bk = _board.get_king(False)
+        tps = _board.get_pieces_under_threat(False)
+
+        self.assertIn(bk, tps, "King not under threat when supposed to be")
+
+        _board.bot.make_move()
+
+        tps = _board.get_pieces_under_threat(False)
+
+        self.assertNotIn(bk, tps, "King under threat when not supposed to be")
+
+    def test_bot1_eating(self):
+        """
+        r . b q k b n r
+        p . . p . p p .
+        B p . . . . . p
+        . . p . p . . .
+        . . . P P P . .
+        . . . . . . . .
+        P P P . . . P P
+        R N B Q K 1 N R
+
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        r1bqkbnr/p2p1pp1/Bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR b
+        """
+
+        # TODO: Finish "test_bot1_eating"
+
+        _board = board.Board(fen='r1bqkbnr/p2p1pp1/Bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR b', bot=bot1.Bot1)
+        _board.bot.make_move()
+
+        self.assertEqual(_board.exportFEN(), 'r2qkbnr/p2p1pp1/bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR w')
+
+    def test_checkmate(self):
+        """
+             r . . . k b n r
+             p . P . . p p .
+             . p B . . . . .
+             . . p . . . . p
+             . . . . . P . .
+             . . . . . . P .
+             P P P . . . . P
+             R N B Q K . N R
+
+             ~~~~
+
+             r3kbnr/p4pp1/1pB2p2/2p4p/5P2/6P1/PPP4P/RNBQK1NR b
+        """
+
+        _board = board.Board(fen='r3kbnr/p1P2pp1/1pB2p2/2p4p/5P2/6P1/PPP4P/RNBQK1NR b', bot=lambda x, y: None)
+        self.assertFalse(_board.checkmate())
+
+    def test_checkmate_2(self):
+        """
+             . . . r . . . .
+             r . . k . . b .
+             . p q . . p . p
+             p K p b p n p .
+             . n . p . . . .
+             . . . . . . . .
+             P P P P . P P P
+             R N B Q . B N R
+
+            ~~~~
+
+            3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w
+        """
+
+        _board = board.Board(fen='3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w')
+        self.assertTrue(_board.checkmate())
+
+    def test_pawn_last_row(self):
+        ...
+
+
 if __name__ == '__main__':
+    logger = logging.getLogger(__name__)
     unittest.main()
