@@ -137,6 +137,7 @@ class Board:
         move_info.sp.go_to(*move_info.sp_pos)
         c, r = move_info.sp_pos
         piece = move_info.sp
+        pp = move_info.pp
         piece.go_to(c, r)
         self.state[r][self.get_letter_from_index(c)] = piece
         eaten_piece = move_info.piece_at_target
@@ -164,6 +165,7 @@ class Board:
 
         assert eaten_piece is None or eaten_piece.color != piece.color
         assert piece is not None
+        pp = isinstance(piece, pieces.Pawn)
 
         move_info = undo_move.UndoMove(self, piece, (c, r), lw)
         self.state[piece.row][Board.get_letter_from_index(piece.col)] = None
