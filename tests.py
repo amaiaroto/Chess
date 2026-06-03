@@ -79,7 +79,6 @@ class ChessTest(unittest.TestCase):
         _board = board.Board(fen='rnbqkbnr/ppp1pppp/3p4/1B6/4P3/8/PPPP1PPP/RNBQK1NR b', bot=bot1.Bot1)
 
         _board.bot.make_move()
-        print(_board.exportFEN())
         self.assertNotEqual(_board.exportFEN(), 'rnb1kbnr/ppppqppp/3p4/1B6/8/8/PPPP1PPP w')
 
     def test_flatten(self):
@@ -179,8 +178,9 @@ class ChessTest(unittest.TestCase):
         _board = board.Board(fen='3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w')
         self.assertTrue(_board.checkmate())
 
-    def test_pawn_last_row(self):
-        ...
+    def test_stalemate(self):
+        _board = board.Board(fen='k7/2Q5/8/K7/8/8/8/8 b')
+        self.assertFalse(_board.checkmate())
 
 
 if __name__ == '__main__':

@@ -5,7 +5,6 @@ piece_icons: dict[str, str] = {
     'B': '♗',
     'N': '♘',
     'P': '♙',
-    'W': '🜲',
 
     'k': '♚',
     'q': '♛',
@@ -13,7 +12,6 @@ piece_icons: dict[str, str] = {
     'b': '♝',
     'n': '♞',
     'p': '♟',
-    'w': '🜲'
 }
 
 
@@ -54,23 +52,28 @@ class PieceError(BaseException):
 
 
 class Piece:
-    def __init__(self, name: str, col: int, row: int, win=False):
-        self.piece: str = name
-        self.color: bool = name.isupper()  # uppercase is w
+    standard_name = None
+
+    def __init__(self, name: str, color: bool, col: int, row: int):
+        self.piece = name
+        self.color: bool = color  # uppercase is w
         self.col: int = col
         self.row: int = row
-        self.win = win
         self.value: int = 1
+        self.set_name()
 
-    def is_white(self):
+    def set_name(self) -> None:
+        self.piece = self.piece.upper() if self.color else self.piece.lower()
+
+    def is_white(self) -> bool:
         return self.color
 
-    def get_name(self):
+    def get_name(self) -> str:
         """
         Gets the letter of the piece
         :return: Letter of piece
         """
-        return self.piece if not self.win else 'W' if self.color else 'w'
+        return self.piece
 
     @staticmethod
     def get_piece_icon(name):
@@ -100,58 +103,20 @@ class Piece:
         pass
 
     @staticmethod
-    def create_piece(name: str, col, row):
-        match name.lower():
-            case 'p':
-                return Pawn(name, col, row)
+    def create_piece(name: str, color: bool, col: int, row: int):
+        for c in Piece.__subclasses__():
+            if c.standard_name == name.lower():
+                return c(color, col, row)
 
-            case 'r':
-                return Rook(name, col, row)
-
-            case 'n':
-                return Knight(name, col, row)
-
-            case 'b':
-                return Bishop(name, col, row)
-
-            case 'q':
-                return Queen(name, col, row)
-
-            case 'k':
-                return King(name, col, row)
-
-            case 'w':
-                return King(name, col, row)
-
-        print(name)
-
-        raise PieceError('Not valid piece type')
+        raise PieceError('Piece Not Found')
 
     @staticmethod
-    def get_piece(name='please input name'):
-        match name.lower():
-            case 'pawn' | 'p':
-                return Pawn
+    def get_piece(name: str):
+        for c in Piece.__subclasses__():
+            if c.standard_name == name.lower():
+                return c
 
-            case 'rook' | 'r':
-                return Rook
-
-            case 'knight' | 'n':
-                return Knight
-
-            case 'bishop' | 'b':
-                return Bishop
-
-            case 'queen' | 'q':
-                return Queen
-
-            case 'king' | 'k':
-                return King
-
-            case 'winner' | 'w':
-                return King
-
-        raise PieceError('Not valid name')
+        raise PieceError('Invalid Piece Name')
 
     def line_movement(self, dr: int, dc: int, board, max_range, color):
         """
@@ -196,6 +161,11 @@ class Piece:
 
 
 class Pawn(Piece):
+    standard_name = 'p'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Pawn.standard_name, color, col, row)
+
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         valid_moves: set = set()
 
@@ -235,8 +205,10 @@ class Pawn(Piece):
 
 
 class Rook(Piece):
-    def __init__(self, name: str, col: int, row: int):
-        super().__init__(name, col, row)
+    standard_name = 'r'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Rook.standard_name, color, col, row)
         self.value = 5
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -257,8 +229,10 @@ class Rook(Piece):
 
 
 class Knight(Piece):
-    def __init__(self, name: str, col: int, row: int):
-        super().__init__(name, col, row)
+    standard_name = 'n'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Knight.standard_name, color, col, row)
         self.value = 3
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -282,8 +256,10 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
-    def __init__(self, name: str, col: int, row: int):
-        super().__init__(name, col, row)
+    standard_name = 'b'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Bishop.standard_name, color, col, row)
         self.value = 3
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -304,8 +280,10 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
-    def __init__(self, name: str, col: int, row: int):
-        super().__init__(name, col, row)
+    standard_name = 'q'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Queen.standard_name, color, col, row)
         self.value = 9
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -336,8 +314,10 @@ MoveError = PieceError
 
 
 class King(Piece):
-    def __init__(self, name: str, col: int, row: int):
-        super().__init__(name, col, row)
+    standard_name = 'k'
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(King.standard_name, color, col, row)
         self.value = 12
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
@@ -352,6 +332,10 @@ class King(Piece):
             f = self.line_movement(-1, -1, board, 0, self.color)
             g = self.line_movement(0, -1, board, 0, self.color)
             h = self.line_movement(1, -1, board, 0, self.color)
+            # i = {(self.row, self.col - 2)} if board.filter_moves_if_opponent_can_reach(self, None,
+            #                                                                            {(self.row,
+            #                                                                              self.col)}) else set()
+            # j = {(self.row, self.col + 2)}
 
             o = flatten(a, b, c, d, e, f, g, h)
 
@@ -362,3 +346,13 @@ class King(Piece):
             return o
 
         return None
+
+    def under_threat(self, board) -> bool:
+        for p in board.get_pieces()[not self.color]:
+            p_valid_moves = p.get_valid_moves(board, True)
+
+            if p_valid_moves is not None:
+                if self.get_pos() in p_valid_moves:
+                    return True
+
+        return False

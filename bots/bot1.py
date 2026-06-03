@@ -9,9 +9,6 @@ class Bot1(Bot):
         moves = []
         optimal = {}
 
-        # TODO: debug the 3 available moves for the bishop at 3,8.
-        #  find out why the move that goes to 2,7 is preferred to the one that goes to 1,6 (eating one)
-
         # The bot prefers 2,7 instead of 1,6 because: ""
         best_moves_value = value
         for p in my_pieces:

@@ -46,7 +46,7 @@ class Board:
         turn = fen.split()[1]
         state = {}
         rp = 8
-        rows = fen.split()[0].split(sep)
+        rows: list[str] = fen.split()[0].split(sep)
 
         for row in rows:
             cp = 1
@@ -59,7 +59,8 @@ class Board:
                 if col.isdigit():
                     cp += int(col)
                 else:
-                    current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col=cp, row=rp)
+                    current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col.isupper(), col=cp,
+                                                                                             row=rp)
                     cp += 1
             rp -= 1
 
@@ -142,7 +143,8 @@ class Board:
         :return: the new state
         """
         self.state[r][self.get_letter_from_index(c)] = piece
-        assert 9 < r > 0 and self.get_letter_from_index(c) in list('abcdefgh')
+        assert 9 > r > 0
+        assert 9 > c > 0
         return self.state
 
     def undo_go_to(self, move_info: undo_move.UndoMove):
@@ -193,8 +195,9 @@ class Board:
         self.state[r][Board.get_letter_from_index(c)] = piece
 
         piece.go_to(c, r)
+
         if pp:
-            self.modify_pos(c, r, pieces.Queen('q', c, r))
+            self.modify_pos(c, r, pieces.Queen(piece.color, c, r))
 
         if not lw:
             if eaten_piece is not None:
@@ -397,10 +400,14 @@ class Board:
         ps = self.get_pieces()
 
         whites = ps[True]
-        white_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), whites))
+        white_kut = self.get_king(True)
+        white_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
+                                       whites))) and white_kut is not None and white_kut.under_threat(self)
 
         blacks = ps[False]
-        black_checkmate = not any(map(lambda x: x.get_valid_moves(self, True), blacks))
+        black_kut = self.get_king(False)
+        black_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
+                                       blacks))) and black_kut is not None and black_kut.under_threat(self)
 
         if white_checkmate or black_checkmate:
             return True
@@ -444,7 +451,6 @@ class Board:
 
         c = self.get_value(color) - maxvalue
         oc = self.get_value(not color)
-        print(f"{c} / ({c}+{oc}) = {c / (c + oc)}")
 
         return c / (c + oc)
 

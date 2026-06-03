@@ -12,9 +12,14 @@ TODOs:
         # 7. add counts of taken pieces (done)
         # 8. add turn info in fen (done)
 
+5/30
+-checkmate does not distinguish between a real checkmate and a stalemate
+(king cannot move but is not in check) (and no valid moves)
+-show the number of eaten pieces for each category
+
 5/28
 DEADLINE: 5/30 Sat (next session (work at home) )
-1 > Add pawn stopping on @-8
+1 > Add pawn stopping on @-8/1
 2 > Add Pawn Promotion
 3 > Add Castling King Side & Queen Side (King Side first)
 
