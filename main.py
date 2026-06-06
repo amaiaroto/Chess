@@ -2,11 +2,10 @@ import os
 import sys
 from contextlib import redirect_stdout
 from enum import Enum
-
 import keyboard as kb
-
 import pieces
 from board import Board
+from board import Mate
 from bots import bot0
 from bots import bot1
 
@@ -14,9 +13,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-logger.debug('LOGGING INITIATED')
+logger.debug("LOGGING INITIATED")
 
-with redirect_stdout(open(os.devnull, 'w')):
+with redirect_stdout(open(os.devnull, "w")):
     import pygame as pg
 
 pg.init()
@@ -25,12 +24,12 @@ pg.mixer.init()
 bg_color = (183, 255, 183)
 title_screen = True
 rect = pg.rect.Rect(0, 0, 0, 0)
-sound = pg.mixer.Sound('click_sfx.mp3')
+sound = pg.mixer.Sound("click_sfx.mp3")
 screen: pg.Surface = pg.display.set_mode((800, 800), pg.RESIZABLE)
-button_font = pg.font.Font('NotoSansSymbols-Bold.ttf', 72)
-button_font2 = pg.font.SysFont('Segoe UI Symbol', 52)
-pg.display.set_icon(pg.image.load('chess-icon.png'))
-pg.display.set_caption('Chess — Play chess against a smart AI!')
+button_font = pg.font.Font("NotoSansSymbols-Bold.ttf", 72)
+button_font2 = pg.font.SysFont("Segoe UI Symbol", 52)
+pg.display.set_icon(pg.image.load("chess-icon.png"))
+pg.display.set_caption("Chess — Play chess against a smart AI!")
 
 
 class State(Enum):
@@ -42,7 +41,7 @@ class State(Enum):
     # play/quit and horse graphical elements to the component list
     #
     # add a draw method that loops over the list of components and draws them.
-    state = Enum('state', [("value_1", 1), ("value_2", 2)])
+    state = Enum("state", [("value_1", 1), ("value_2", 2)])
 
 
 class Button:
@@ -77,14 +76,14 @@ class Button:
         return self.rect.collidepoint(mouse) and pg.mouse.get_pressed()[0]
 
     @staticmethod
-    def parse(text: str, hint: str | list = '[]') -> str:
-        result = ''
+    def parse(text: str, hint: str | list = "[]") -> str:
+        result = ""
         co = False
 
         for c in text:
             con = False
 
-            if c == '\\':
+            if c == "\\":
                 con = True
 
             if c == hint[0] and not con:
@@ -106,6 +105,7 @@ checkmate = True
 class Popup:
     def __init__(self, color, surface):
         global checkmate
+
         if checkmate:
             width = 500
             height = 300
@@ -113,7 +113,7 @@ class Popup:
                          pg.Rect(surface.get_width() // 2 - width // 2, surface.get_height() // 2 - height // 2, width,
                                  height),
                          border_radius=10)
-            text = pg.font.Font(None, 37).render(f'Checkmate!\n{ {True: "White", False: "Black"}[color]} wins!', True,
+            text = pg.font.Font(None, 37).render(f"Checkmate!\n{ {True: "White", False: "Black"}[color]} wins!", True,
                                                  (245, 245, 245))
             ok_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 2 - 30, width // 2,
                                height // 4,
@@ -132,6 +132,41 @@ class Popup:
 
             if ok_button.clicked():
                 checkmate = False
+
+
+stalemate = True
+
+
+class Popup2:
+    def __init__(self, surface):
+        global stalemate
+
+        if stalemate:
+            width = 500
+            height = 300
+            pg.draw.rect(surface, (57, 57, 58),
+                         pg.Rect(surface.get_width() // 2 - width // 2, surface.get_height() // 2 - height // 2, width,
+                                 height),
+                         border_radius=10)
+            text = pg.font.Font(None, 37).render(f"Stalemate!\nIt's a draw!", True,
+                                                 (245, 245, 245))
+            ok_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 2 - 30, width // 2,
+                               height // 4,
+                               "OK", button_font, (0, 255, 0), (0, 205, 0))
+            exit_button = Button(surface.get_width() // 2 - width // 4, surface.get_height() // 1.70 - 15, width // 2,
+                                 height // 4,
+                                 "EXIT", button_font, (255, 0, 0), (205, 0, 0))
+
+            surface.blit(text,
+                         (surface.get_width() // 2 - text.get_width() // 2, surface.get_height() // 2 - height // 2.5))
+            ok_button.draw(surface)
+            exit_button.draw(surface)
+
+            if exit_button.clicked():
+                exit_chess()
+
+            if ok_button.clicked():
+                stalemate = False
 
 
 fen = Board.starting_position()
@@ -172,26 +207,26 @@ while True:
         screen.fill(bg_color)
 
         if title_screen:
-            if kb.is_pressed('esc'):
+            if kb.is_pressed("esc"):
                 exit_chess()
 
-            if kb.is_pressed('shift+alt+b'):
+            if kb.is_pressed("shift+alt+b"):
                 print(board.exportFEN())
 
-            text = pg.font.Font('DejaVuSans.ttf', 138)
+            text = pg.font.Font("DejaVuSans.ttf", 138)
 
-            chars = [text.render(i, False, (0, 0, 0) if 'Ch♞s'.index(i) % 2 == 0 else (255, 255, 255)) for i in
-                     list('Ch♞s')]
-            chars.append(text.render('s', False, (0, 0, 0)))
-            txt = list('Ch♞ss')
+            chars = [text.render(i, False, (0, 0, 0) if "Ch♞s".index(i) % 2 == 0 else (255, 255, 255)) for i in
+                     list("Ch♞s")]
+            chars.append(text.render("s", False, (0, 0, 0)))
+            txt = list("Ch♞ss")
 
-            play_button = Button(305, 400, 190, 100, 'PLAY', button_font,
+            play_button = Button(305, 400, 190, 100, "PLAY", button_font,
                                  (0, 255, 0), (0, 205, 0))
-            quit_button = Button(305, 525, 190, 100, 'QUIT', button_font,
+            quit_button = Button(305, 525, 190, 100, "QUIT", button_font,
                                  (255, 0, 0), (205, 0, 0))
-            white_color_button = Button(20, 20, 50, 50, '', button_font,
+            white_color_button = Button(20, 20, 50, 50, "", button_font,
                                         (255, 255, 255), (250, 250, 250))
-            black_color_button = Button(80, 20, 50, 50, '', button_font,
+            black_color_button = Button(80, 20, 50, 50, "", button_font,
                                         (0, 0, 0), (5, 5, 5))
 
             play_button.draw(screen)
@@ -199,7 +234,7 @@ while True:
             white_color_button.draw(screen)
             black_color_button.draw(screen)
 
-            if play_button.clicked() or kb.is_pressed('enter'):
+            if play_button.clicked() or kb.is_pressed("enter"):
                 state = board.state
                 start_chess()
 
@@ -214,7 +249,7 @@ while True:
 
             text_pos = (800 - sum(t.get_width() for t in chars)) // 2
             for t in chars:
-                if chars.index(t) == txt.index('♞'):
+                if chars.index(t) == txt.index("♞"):
                     rect = [t.get_rect(), text_pos]
 
                 screen.blit(t, (text_pos, 300 - t.get_rect().centery))
@@ -224,30 +259,35 @@ while True:
                 sound.play()
         else:
 
-            if kb.is_pressed('shift+alt+b'):
+            if kb.is_pressed("shift+alt+b"):
                 print(board.exportFEN())
 
-            back_button = Button(10, 10, 53, 53, '\u21A9[↩]', button_font2,
+            back_button = Button(10, 10, 53, 53, "\u21A9[↩]", button_font2,
                                  (255, 0, 0), (200, 0, 0))
             back_button.draw(screen)
             board.draw()
             jail = board.get_jail()
-            font = pg.font.SysFont('Segoe UI Symbol', 50)
+            font = pg.font.SysFont("Segoe UI Symbol", 50)
 
             pos = (80, 0)
             screen.blit(
-                font.render(' '.join([pieces.piece_icons[i] for i in jail[True].keys()]), True, (255, 255, 255)),
+                font.render(" ".join([pieces.piece_icons[i] for i in jail[True].keys()]), True, (255, 255, 255)),
                 pos)
 
             pos = (80, 720)
             screen.blit(
-                font.render(' '.join([pieces.piece_icons[i] for i in jail[False]]), True, (0, 0, 0)),
+                font.render(" ".join([pieces.piece_icons[i] for i in jail[False]]), True, (0, 0, 0)),
                 pos)
 
-            if board.checkmate():
-                Popup(not board.turn, screen)
+            mate = board.checkmate()
+            if mate:
+                if mate == Mate.checkmate:
+                    Popup(not player_color, screen)
 
-            if back_button.clicked() or kb.is_pressed('esc'):
+                elif mate == Mate.stalemate:
+                    Popup2(screen)
+
+            if back_button.clicked() or kb.is_pressed("esc"):
                 title_screen = True
 
         pg.display.flip()

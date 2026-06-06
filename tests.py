@@ -12,7 +12,7 @@ class ChessTest(unittest.TestCase):
         board.Board()
 
     def test_valid_moves_filter(self):
-        _board = board.Board((8, 8), None, None, fen='k7/7P/3b4/8/4K3/8/8/8 w')
+        _board = board.Board((8, 8), None, None, fen="k7/7P/3b4/8/4K3/8/8/8 w")
 
         piece = _board.get_piece_at(8, 7)
         piece2 = _board.get_king(True)
@@ -24,7 +24,7 @@ class ChessTest(unittest.TestCase):
         self.assertEqual({(4, 5), (4, 4), (4, 3), (5, 3), (6, 5), (6, 3)}, piece2.get_valid_moves(_board))
 
     def test_valid_moves_filter_2(self):
-        _board = board.Board((8, 8), None, None, fen='3qkbnr/3pp2p/6Q1/8/4B/8/8/8 w')
+        _board = board.Board((8, 8), None, None, fen="3qkbnr/3pp2p/6Q1/8/4B/8/8/8 w")
         _board.printASCII()
         pawn = _board.get_piece_at(8, 7)
         self.assertIsNotNone(pawn)
@@ -44,12 +44,12 @@ class ChessTest(unittest.TestCase):
         self.assertEqual({(7, 6)}, pawn.get_valid_moves(_board, no_turn=True))
 
     def test_valid_moves_filter_3(self):
-        _board = board.Board(fen='3pkp2/3p1Q2/8/3B3/8/8/8/8 b')
+        _board = board.Board(fen="3pkp2/3p1Q2/8/3B3/8/8/8/8 b")
         king = _board.get_king(False)
         self.assertEqual(set(), king.get_valid_moves(_board))
 
     def test_fen(self):
-        f = 'k7/7P/3b4/8/4K3/8/8/8 w'
+        f = "k7/7P/3b4/8/4K3/8/8/8 w"
         _board = board.Board(fen=f)
         self.assertEqual(f, _board.exportFEN())
 
@@ -76,10 +76,10 @@ class ChessTest(unittest.TestCase):
         _board.check_consistency()
 
     def test_bot1(self):
-        _board = board.Board(fen='rnbqkbnr/ppp1pppp/3p4/1B6/4P3/8/PPPP1PPP/RNBQK1NR b', bot=bot1.Bot1)
+        _board = board.Board(fen="rnbqkbnr/ppp1pppp/3p4/1B6/4P3/8/PPPP1PPP/RNBQK1NR b", bot=bot1.Bot1)
 
         _board.bot.make_move()
-        self.assertNotEqual(_board.exportFEN(), 'rnb1kbnr/ppppqppp/3p4/1B6/8/8/PPPP1PPP w')
+        self.assertNotEqual(_board.exportFEN(), "rnb1kbnr/ppppqppp/3p4/1B6/8/8/PPPP1PPP w")
 
     def test_flatten(self):
         iterable = [
@@ -104,7 +104,7 @@ class ChessTest(unittest.TestCase):
         self.assertEqual(len(flattened_iterable), 23)
 
     def test_bot1_2(self):
-        _board = board.Board(fen='r1bqkbnr/1ppppppp/3N4/p1n5/8/8/PPPPPPPP/RNBQKB1R b', bot=bot1.Bot1)
+        _board = board.Board(fen="r1bqkbnr/1ppppppp/3N4/p1n5/8/8/PPPPPPPP/RNBQKB1R b", bot=bot1.Bot1)
 
         bk = _board.get_king(False)
         tps = _board.get_pieces_under_threat(False)
@@ -133,12 +133,10 @@ class ChessTest(unittest.TestCase):
         r1bqkbnr/p2p1pp1/Bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR b
         """
 
-        # TODO: Finish "test_bot1_eating"
-
-        _board = board.Board(fen='r1bqkbnr/p2p1pp1/Bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR b', bot=bot1.Bot1)
+        _board = board.Board(fen="r1bqkbnr/p2p1pp1/Bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR b", bot=bot1.Bot1)
         _board.bot.make_move()
 
-        self.assertEqual(_board.exportFEN(), 'r2qkbnr/p2p1pp1/bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR w')
+        self.assertEqual(_board.exportFEN(), "r2qkbnr/p2p1pp1/bp5p/2p1p3/3PPP2/8/PPP3PP/RNBQK1NR w")
 
     def test_checkmate(self):
         """
@@ -156,8 +154,8 @@ class ChessTest(unittest.TestCase):
              r3kbnr/p4pp1/1pB2p2/2p4p/5P2/6P1/PPP4P/RNBQK1NR b
         """
 
-        _board = board.Board(fen='r3kbnr/p1P2pp1/1pB2p2/2p4p/5P2/6P1/PPP4P/RNBQK1NR b', bot=lambda x, y: None)
-        self.assertFalse(_board.checkmate())
+        _board = board.Board(fen="r3kbnr/p1P2pp1/1pB2p2/2p4p/5P2/6P1/PPP4P/RNBQK1NR b", bot=lambda x, y: None)
+        self.assertEqual(_board.checkmate(), board.Mate.no_mate)
 
     def test_checkmate_2(self):
         """
@@ -175,14 +173,14 @@ class ChessTest(unittest.TestCase):
             3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w
         """
 
-        _board = board.Board(fen='3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w')
-        self.assertTrue(_board.checkmate())
+        _board = board.Board(fen="3r4/r2k2b1/1pq2p1p/pKpbpnp1/1n1p4/8/PPPP1PPP/RNBQ1BNR w")
+        self.assertEqual(_board.checkmate(), board.Mate.checkmate)
 
     def test_stalemate(self):
-        _board = board.Board(fen='k7/2Q5/8/K7/8/8/8/8 b')
-        self.assertFalse(_board.checkmate())
+        _board = board.Board(fen="k7/2Q5/8/K7/8/8/8/8 b")
+        self.assertEqual(_board.checkmate(), board.Mate.stalemate)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logger = logging.getLogger(__name__)
     unittest.main()

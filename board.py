@@ -2,10 +2,17 @@ import base_bot
 import pieces
 import undo_move
 import logging
+from enum import Enum
 
 toggle = False
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
+
+
+class Mate(Enum):
+    no_mate = 1
+    checkmate = 2
+    stalemate = 3
 
 
 class Board:
@@ -37,7 +44,7 @@ class Board:
         return chr(96 + index)
 
     @staticmethod
-    def readFEN(fen, sep='/') -> tuple[dict, bool]:
+    def readFEN(fen, sep="/") -> tuple[dict, bool]:
         """
         :param sep: separator
         :param fen: fen string, see https://www.chess.com/terms/fen-chess for explanation
@@ -64,7 +71,7 @@ class Board:
                     cp += 1
             rp -= 1
 
-        return state, {'w': True, 'b': False}[turn]
+        return state, {"w": True, "b": False}[turn]
 
     def printASCII(self) -> str:
         board = ""
@@ -73,12 +80,12 @@ class Board:
             ar = ""
             for c in range(1, 9):
                 lc = Board.get_letter_from_index(c)
-                ar += self.state[r][lc].get_name() if self.state[r][lc] is not None else '.'
+                ar += self.state[r][lc].get_name() if self.state[r][lc] is not None else "."
 
             board += ar + "\n"
 
-        board = ' ' + ' '.join(list(board))
-        print(board, end='')
+        board = " " + " ".join(list(board))
+        print(board, end="")
         return board
 
     def exportFEN(self) -> str:
@@ -102,13 +109,13 @@ class Board:
             if num != 0:
                 ar += str(num)
 
-            fen += ar + '/'
+            fen += ar + "/"
 
-        return fen[:-1] + {True: ' w', False: ' b'}[self.turn]
+        return fen[:-1] + {True: " w", False: " b"}[self.turn]
 
     @staticmethod
     def get_color_name(color) -> str:
-        return 'white' if color else 'black'
+        return "white" if color else "black"
 
     def get_piece_at(self, c, r) -> pieces.Piece | None:
         """
@@ -262,11 +269,11 @@ class Board:
 
                 real_r = (self.rows - r) + 1
                 get_icon = lambda p: \
-                    pieces.Piece.get_piece_icon('W' if p.color else 'w') if isinstance(p, pieces.King) and \
+                    pieces.Piece.get_piece_icon("W" if p.color else "w") if isinstance(p, pieces.King) and \
                                                                             self.won == p.color else p.get_icon()
 
                 if self.state[real_r][lc] is not None:
-                    icon = self.pg.font.SysFont('Segoe UI Symbol', square_size - 10).render(
+                    icon = self.pg.font.SysFont("Segoe UI Symbol", square_size - 10).render(
                         get_icon(self.state[real_r][lc]), True,
                         (255, 255, 255) if self.state[real_r][lc].is_white() else (0, 0, 0))
 
@@ -331,7 +338,7 @@ class Board:
 
     def has_won(self) -> bool | None:
         for color, jail in self.jail.items():
-            if 'k' in jail or 'K' in jail:
+            if "k" in jail or "K" in jail:
                 return not color
 
         return None
@@ -394,25 +401,29 @@ class Board:
 
     @staticmethod
     def starting_position():
-        return 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w'
+        return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w"
 
-    def checkmate(self):
+    def checkmate(self) -> Mate:
         ps = self.get_pieces()
 
         whites = ps[True]
         white_kut = self.get_king(True)
         white_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
-                                       whites))) and white_kut is not None and white_kut.under_threat(self)
+                                       whites))) and white_kut is not None
 
         blacks = ps[False]
         black_kut = self.get_king(False)
         black_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
-                                       blacks))) and black_kut is not None and black_kut.under_threat(self)
+                                       blacks))) and black_kut is not None
 
         if white_checkmate or black_checkmate:
-            return True
+            if white_kut.under_threat(self) or black_kut.under_threat(self):
+                return Mate.checkmate
 
-        return False
+            else:
+                return Mate.stalemate
+
+        return Mate.no_mate
 
     def get_value(self, color: bool = None) -> int:
         total = 0

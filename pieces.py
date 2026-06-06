@@ -1,17 +1,17 @@
 piece_icons: dict[str, str] = {
-    'K': '♔',
-    'Q': '♕',
-    'R': '♖',
-    'B': '♗',
-    'N': '♘',
-    'P': '♙',
+    "K": "♔",
+    "Q": "♕",
+    "R": "♖",
+    "B": "♗",
+    "N": "♘",
+    "P": "♙",
 
-    'k': '♚',
-    'q': '♛',
-    'r': '♜',
-    'b': '♝',
-    'n': '♞',
-    'p': '♟',
+    "k": "♚",
+    "q": "♛",
+    "r": "♜",
+    "b": "♝",
+    "n": "♞",
+    "p": "♟",
 }
 
 
@@ -110,7 +110,7 @@ class Piece:
             if c.standard_name == name.lower():
                 return c(color, col, row)
 
-        raise PieceError('Piece Not Found')
+        raise PieceError("Piece Not Found")
 
     @staticmethod
     def get_piece(name: str):
@@ -118,7 +118,7 @@ class Piece:
             if c.standard_name == name.lower():
                 return c
 
-        raise PieceError('Invalid Piece Name')
+        raise PieceError("Invalid Piece Name")
 
     def line_movement(self, dr: int, dc: int, board, max_range, color):
         """
@@ -163,7 +163,7 @@ class Piece:
 
 
 class Pawn(Piece):
-    standard_name = 'p'
+    standard_name = "p"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Pawn.standard_name, color, col, row)
@@ -207,7 +207,7 @@ class Pawn(Piece):
 
 
 class Rook(Piece):
-    standard_name = 'r'
+    standard_name = "r"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Rook.standard_name, color, col, row)
@@ -231,7 +231,7 @@ class Rook(Piece):
 
 
 class Knight(Piece):
-    standard_name = 'n'
+    standard_name = "n"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Knight.standard_name, color, col, row)
@@ -258,7 +258,7 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
-    standard_name = 'b'
+    standard_name = "b"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Bishop.standard_name, color, col, row)
@@ -282,7 +282,7 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
-    standard_name = 'q'
+    standard_name = "q"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Queen.standard_name, color, col, row)
@@ -316,7 +316,7 @@ MoveError = PieceError
 
 
 class King(Piece):
-    standard_name = 'k'
+    standard_name = "k"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(King.standard_name, color, col, row)
@@ -342,7 +342,7 @@ class King(Piece):
             o = flatten(a, b, c, d, e, f, g, h)
 
             if _filter:
-                # removes the king's valid moves that/are reachable by opponent pieces
+                # removes the king"s valid moves that/are reachable by opponent pieces
                 board.filter_moves_if_opponent_can_reach(self, None, o)
 
             return o
