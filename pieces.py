@@ -42,7 +42,7 @@ def flatten(*iterable, keep_duplicates: bool = False) -> set | list:
     if keep_duplicates:
         return result
 
-    return result
+    return set(result)
 
 
 class PieceError(BaseException):

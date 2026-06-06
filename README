@@ -12,6 +12,11 @@ TODOs:
         # 7. add counts of taken pieces (done)
         # 8. add turn info in fen (done)
 
+6/6
+- add pawn promotion
+- add stalemate messaging
+- add castling
+
 5/30
 -checkmate does not distinguish between a real checkmate and a stalemate
 (king cannot move but is not in check) (and no valid moves)
