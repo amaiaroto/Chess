@@ -1,7 +1,3 @@
-import numpy
-
-import typefull
-
 piece_icons: dict[str, str] = {
     'K': '♔',
     'Q': '♕',
@@ -45,9 +41,7 @@ def flatten(*iterable, keep_duplicates: bool = False) -> set | list:
 
     if keep_duplicates:
         return result
-    # print(result)
-    # print(typefull.get_nested_type(result))
-    # assert typefull.get_nested_type(result) == list[tuple[int, int]]
+
     return result
 
 
@@ -68,7 +62,6 @@ class Piece:
         self.col: int = col
         self.row: int = row
         self.value: int = 1
-        self.has_moved: bool = False
         self.set_name()
 
     def set_name(self) -> None:
@@ -105,7 +98,6 @@ class Piece:
 
         self.col = c
         self.row = r
-        self.has_moved = True
 
         return self.col, self.row
 
@@ -128,7 +120,7 @@ class Piece:
 
         raise PieceError('Invalid Piece Name')
 
-    def line_movement(self, dr: int, dc: int, board, max_range, color) -> set[tuple]:
+    def line_movement(self, dr: int, dc: int, board, max_range, color):
         """
         :param color: piece color
         :param dr: delta row
@@ -253,12 +245,9 @@ class Knight(Piece):
 
         for move in moves:
             if board.is_valid_cell(*move) and (self.color == board.turn or no_turn):
-
                 if board.get_piece_at(*move) is not None:
-
                     if board.get_piece_at(*move).color != self.color:
                         valid_moves.add(move)
-
                 else:
                     valid_moves.add(move)
 
@@ -334,10 +323,9 @@ class King(Piece):
         self.value = 12
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
-        if self.color == board.turn or no_turn:
-            colour = 1 if self.color else 8
-            # normal movement
+        global MoveError
 
+        if self.color == board.turn or no_turn:
             a = self.line_movement(1, 0, board, 0, self.color)
             b = self.line_movement(1, 1, board, 0, self.color)
             c = self.line_movement(0, 1, board, 0, self.color)
@@ -346,40 +334,15 @@ class King(Piece):
             f = self.line_movement(-1, -1, board, 0, self.color)
             g = self.line_movement(0, -1, board, 0, self.color)
             h = self.line_movement(1, -1, board, 0, self.color)
+            # i = {(self.row, self.col - 2)} if board.filter_moves_if_opponent_can_reach(self, None,
+            #                                                                            {(self.row,
+            #                                                                              self.col)}) else set()
+            # j = {(self.row, self.col + 2)}
 
-            # castling
-            # 0 = none
-            # 1 = king
-            # 2 = queen
-
-            rook = board.get_piece_at(8, colour)
-            i = set()
-
-            # if rook is not None:
-            #     _i = self.line_movement(0, 1, board, 1, self.color)
-            #     board.filter_moves_if_opponent_can_reach(self, None, _i)
-            #
-            #     if _i == {(self.row, self.col + 1), (self.row, self.col + 2)}:  # check if f-colour & g-colour are safe
-            #         if not self.has_moved and not rook.has_moved:  # check if this piece or/and *rook* has moved
-            #             if not self.under_threat(board):  # check if in check
-            #                 i = {(self.row, self.col + 2, 1)}
-
-            q_rook = board.get_piece_at(1, colour)
-            j = set()
-
-            # if q_rook is not None:
-            #     _j = self.line_movement(0, -1, board, 1, self.color)
-            #     board.filter_moves_if_opponent_can_reach(self, None, _j)
-            #
-            #     if _j == {(self.row, self.col - 1), (self.row, self.col - 2)}:  # check if c-colour & d-colour are safe
-            #         if not self.has_moved and not q_rook.has_moved:  # check if this piece or/and *q_rook* has moved
-            #             if not self.under_threat(board):  # check if in check
-            #                 j = {(self.row, self.col - 2, 2)}
-
-            o = flatten(a, b, c, d, e, f, g, h, i, j)
+            o = flatten(a, b, c, d, e, f, g, h)
 
             if _filter:
-                # removes the king's valid moves reachable by opponent pieces
+                # removes the king's valid moves that/are reachable by opponent pieces
                 board.filter_moves_if_opponent_can_reach(self, None, o)
 
             return o

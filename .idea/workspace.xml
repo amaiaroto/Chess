@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="5/14 robotics changes">
-      <change afterPath="$PROJECT_DIR$/typefull.py" afterDir="false" />
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="6/4 rc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pieces.py" beforeDir="false" afterPath="$PROJECT_DIR$/pieces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/typefull.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/undo_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/undo_move.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,7 +92,7 @@
     "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter.executor": "Debug",
     "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3.executor": "Run",
     "Python tests.Python tests in ChessTest.py.executor": "Run",
-    "Python tests.Python tests in tests.py.executor": "Debug",
+    "Python tests.Python tests in tests.py.executor": "Run",
     "Python.Board.executor": "Run",
     "Python.Chess (1).executor": "Debug",
     "Python.Chess.executor": "Run",
@@ -253,9 +253,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests in tests.py" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_stalemate" />
-        <item itemvalue="Python tests.Python tests in tests.py" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_checkmate_2" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_bot1_eating" />
       </list>
@@ -275,14 +275,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771247068679</updated>
-    </task>
-    <task id="LOCAL-00034" summary="nothing (fr)">
-      <option name="closed" value="true" />
-      <created>1775003179494</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1775003179494</updated>
     </task>
     <task id="LOCAL-00035" summary="adding &quot;&quot;tests&quot;&quot;">
       <option name="closed" value="true" />
@@ -668,7 +660,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780446074040</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="6/4 rc">
+      <option name="closed" value="true" />
+      <created>1780621900366</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1780621900366</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -683,7 +683,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix filtering moves" />
     <MESSAGE value="unflipping state" />
     <MESSAGE value="adding readState" />
     <MESSAGE value="Improving tests" />
@@ -708,7 +707,8 @@
     <MESSAGE value="changes" />
     <MESSAGE value="pawnpro" />
     <MESSAGE value="5/14 robotics changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="5/14 robotics changes" />
+    <MESSAGE value="6/4 rc" />
+    <option name="LAST_COMMIT_MESSAGE" value="6/4 rc" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -723,19 +723,19 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <condition expression="not (9 &gt; piece.row &gt; 0)" language="Python" />
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>209</line>
+          <line>191</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <condition expression="not (9 &gt; r &gt; 0)" language="Python" />
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>211</line>
+          <line>193</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <condition expression="move==(5,8)" language="Python" />
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>396</line>
+          <line>377</line>
           <option name="timeStamp" value="71" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -755,23 +755,18 @@
           <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/bots/bot1.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>418</line>
+          <line>399</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>425</line>
+          <line>406</line>
           <option name="timeStamp" value="79" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/board.py</url>
-          <line>430</line>
+          <line>411</line>
           <option name="timeStamp" value="80" />
         </line-breakpoint>
       </breakpoints>

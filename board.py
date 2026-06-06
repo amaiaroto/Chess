@@ -59,9 +59,7 @@ class Board:
                 if col.isdigit():
                     cp += int(col)
                 else:
-                    current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col,
-                                                                                             col.isupper(),
-                                                                                             col=cp,
+                    current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col.isupper(), col=cp,
                                                                                              row=rp)
                     cp += 1
             rp -= 1
@@ -158,29 +156,14 @@ class Board:
         move_info.sp.go_to(*move_info.sp_pos)
         c, r = move_info.sp_pos
         piece = move_info.sp
-        castling = move_info.castling
-
+        pp = move_info.pp
         piece.go_to(c, r)
         self.state[r][self.get_letter_from_index(c)] = piece
-        piece.has_moved = False
-
         assert 9 > r > 0
-
         eaten_piece = move_info.piece_at_target
         self.state[move_info.pos_of_piece_at_target[1]][
             Board.get_letter_from_index(move_info.pos_of_piece_at_target[0])] = eaten_piece
-
         assert 9 > move_info.pos_of_piece_at_target[1] > 0
-
-        row = 1 if piece.color else 8
-
-        if castling == 1:
-            king_rook = self.get_piece_at(6, row)
-            king_rook.go_to(8, row)
-
-        if castling == 2:
-            queen_rook = self.get_piece_at(1, row)
-            queen_rook.go_to(1, row)
 
         if not move_info.lw:
             if eaten_piece is not None:
@@ -198,7 +181,6 @@ class Board:
         :param piece: this piece is going to be moved from piece.row/col to c, r
         :return:
         """
-        assert 0 < r < 9
 
         eaten_piece: pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
 
@@ -385,7 +367,6 @@ class Board:
         :param valid_moves: this is modified in place by this function
         :return: nothing
         """
-
         assert piece is not None
 
         check_valid_move4piece = pos is None
@@ -409,7 +390,7 @@ class Board:
 
                 self.undo_go_to(undo)
 
-            set(valid_moves).difference_update(vm)
+            valid_moves.difference_update(vm)
 
     @staticmethod
     def starting_position():
