@@ -13,8 +13,8 @@ TODOs:
         # 8. add turn info in fen (done)
 
 6/6
-- add pawn promotion
-- add stalemate messaging
+- add pawn promotion (check)
+- add stalemate messaging (check)
 - add castling
 
 5/30

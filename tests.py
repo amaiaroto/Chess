@@ -180,6 +180,11 @@ class ChessTest(unittest.TestCase):
         _board = board.Board(fen="k7/2Q5/8/K7/8/8/8/8 b")
         self.assertEqual(_board.checkmate(), board.Mate.stalemate)
 
+    def test_pawn_promotion(self):
+        _board = board.Board(fen="8/P7/8/8/k6K/8/8/7p w")
+        _board.go_to(1, 8, _board.get_piece_at(1, 7))
+        self.assertEqual(_board.exportFEN(), 'Q7/8/8/8/k6K/8/8/7p b')
+
 
 if __name__ == "__main__":
     logger = logging.getLogger(__name__)
