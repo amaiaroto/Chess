@@ -183,9 +183,23 @@ class ChessTest(unittest.TestCase):
     def test_pawn_promotion(self):
         _board = board.Board(fen="8/P7/8/8/k6K/8/8/7p w")
         _board.go_to(1, 8, _board.get_piece_at(1, 7))
-        self.assertEqual(_board.exportFEN(), 'Q7/8/8/8/k6K/8/8/7p b')
+        self.assertEqual(_board.exportFEN(), "Q7/8/8/8/k6K/8/8/7p b")
+
+    def test_fmiocr(self):
+        """
+        k . . . . . . .
+        . . . . . . . .
+        q . . . . . K .
+        . P . . . . . .
+        . . . . . . . .
+        :return:
+        """
+        _board = board.Board(fen="k7/8/8/8/8/q5K1/1P6/8 w")
+        pawn = _board.get_piece_at(2, 2)
+        vm = pawn.get_valid_moves(_board)
+        self.assertEqual(vm, {(1, 3), (2, 3)})
 
 
-if __name__ == "__main__":
+if __name__ in {"__main__", "__main_mp__"}:
     logger = logging.getLogger(__name__)
     unittest.main()

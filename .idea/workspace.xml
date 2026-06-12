@@ -4,10 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="Added stalemate popup">
+    <list default="true" id="312e68a6-71d4-4de1-bb0b-a8166bb7d30d" name="Changes" comment="Added Castling">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pieces.py" beforeDir="false" afterPath="$PROJECT_DIR$/pieces.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/undo_move.py" beforeDir="false" afterPath="$PROJECT_DIR$/undo_move.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,54 +70,55 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-git.push.result": "",
-    "Notification.DisplayName-DoNotAsk-vcs.commit.finished": "3 files committed",
-    "Notification.DoNotAsk-git.push.result": "true",
-    "Notification.DoNotAsk-vcs.commit.finished": "true",
-    "Python tests.Python tests for ChessTest.ChessTest.executor": "Run",
-    "Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor": "Run",
-    "Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor": "Run",
-    "Python tests.Python tests for ChessTest.TestMoves.executor": "Run",
-    "Python tests.Python tests for ChessTest.TestMoves.test_fen.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_bot1.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_bot1_2.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_bot1_eating.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_checkmate_2.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_flatten.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_stalemate.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_undo_move.executor": "Run",
-    "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter.executor": "Debug",
-    "Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3.executor": "Run",
-    "Python tests.Python tests in ChessTest.py.executor": "Run",
-    "Python tests.Python tests in tests.py.executor": "Run",
-    "Python.Board.executor": "Run",
-    "Python.Chess (1).executor": "Debug",
-    "Python.Chess.executor": "Run",
-    "Python.board.executor": "Run",
-    "Python.bot1.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.rock_paper_scissors.executor": "Run",
-    "Python.scratch.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/asher/PycharmProjects/Chess",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.completion"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-git.push.result&quot;: &quot;&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-vcs.commit.finished&quot;: &quot;3 files committed&quot;,
+    &quot;Notification.DoNotAsk-git.push.result&quot;: &quot;true&quot;,
+    &quot;Notification.DoNotAsk-vcs.commit.finished&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.test_glitches.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.ChessTest.test_valid_moves_filter_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.TestMoves.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for ChessTest.TestMoves.test_fen.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_bot1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_bot1_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_bot1_eating.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_checkmate_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_flatten.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_fmiocr.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_stalemate.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_undo_move.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_valid_moves_filter.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests for tests.ChessTest.test_valid_moves_filter_3.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in ChessTest.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in tests.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Board.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Chess (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Chess.executor&quot;: &quot;Run&quot;,
+    &quot;Python.board.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bot1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.rock_paper_scissors.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/asher/PycharmProjects/Chess&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON",
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\asher\PycharmProjects\Chess" />
@@ -127,7 +132,7 @@
       <command value="Noen" />
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in tests.py">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -181,21 +186,6 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for tests.ChessTest.test_bot1_eating" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="Chess" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;tests.ChessTest.test_bot1_eating&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="Python tests for tests.ChessTest.test_checkmate_2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="Chess" />
       <option name="ENV_FILES" value="" />
@@ -208,6 +198,21 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;tests.ChessTest.test_checkmate_2&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests.ChessTest.test_fmiocr" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="Chess" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.ChessTest.test_fmiocr&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -243,19 +248,19 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_checkmate_2" />
+      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_fmiocr" />
       <item itemvalue="Python tests.Python tests for tests.ChessTest.test_stalemate" />
       <item itemvalue="Python tests.Python tests in tests.py" />
-      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_checkmate_2" />
-      <item itemvalue="Python tests.Python tests for tests.ChessTest.test_bot1_eating" />
-      <item itemvalue="Python tests.Python tests for tests.ChessTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests in tests.py" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest" />
+        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_fmiocr" />
+        <item itemvalue="Python tests.Python tests in tests.py" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_stalemate" />
         <item itemvalue="Python tests.Python tests for tests.ChessTest.test_checkmate_2" />
-        <item itemvalue="Python tests.Python tests for tests.ChessTest.test_bot1_eating" />
       </list>
     </recent_temporary>
   </component>
@@ -273,14 +278,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1771247068679</updated>
-    </task>
-    <task id="LOCAL-00038" summary="eh">
-      <option name="closed" value="true" />
-      <created>1775003644513</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1775003644513</updated>
     </task>
     <task id="LOCAL-00039" summary="saving ''s">
       <option name="closed" value="true" />
@@ -666,7 +663,15 @@
       <option name="project" value="LOCAL" />
       <updated>1780773084895</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Added a new test and modified README">
+      <option name="closed" value="true" />
+      <created>1781048224787</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1781048224787</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -681,7 +686,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Improving tests" />
     <MESSAGE value="i forgot" />
     <MESSAGE value="nothing (fr)" />
     <MESSAGE value="adding &quot;&quot;tests&quot;&quot;" />
@@ -706,7 +710,8 @@
     <MESSAGE value="6/4 rc" />
     <MESSAGE value="6/6 unchanges" />
     <MESSAGE value="Added stalemate popup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added stalemate popup" />
+    <MESSAGE value="Added a new test and modified README" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a new test and modified README" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -723,6 +728,11 @@
           <url>file://$PROJECT_DIR$/bots/bot1.py</url>
           <line>14</line>
           <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests.py</url>
+          <line>197</line>
+          <option name="timeStamp" value="82" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

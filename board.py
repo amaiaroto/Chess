@@ -4,6 +4,8 @@ import undo_move
 import logging
 from enum import Enum
 
+from pieces import CastlingSides
+
 toggle = False
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -57,18 +59,24 @@ class Board:
 
         for row in rows:
             cp = 1
+
             for col in row:
                 current_row = state.get(rp)
+
                 if current_row is None:
                     current_row = {Board.get_letter_from_index(k): None for k in range(1, 9)}
                     state[rp] = current_row
+
                     assert 9 > rp > 0
+
                 if col.isdigit():
                     cp += int(col)
+
                 else:
                     current_row[Board.get_letter_from_index(cp)] = pieces.Piece.create_piece(col, col.isupper(), col=cp,
                                                                                              row=rp)
                     cp += 1
+
             rp -= 1
 
         return state, {"w": True, "b": False}[turn]
@@ -90,9 +98,11 @@ class Board:
 
     def exportFEN(self) -> str:
         fen = ""
+
         for r in range(8, 0, -1):
             num = 0
             ar = ""
+
             for c in range(1, 9):
                 lc = Board.get_letter_from_index(c)
 
@@ -161,32 +171,52 @@ class Board:
         :return: None
         """
         move_info.sp.go_to(*move_info.sp_pos)
+
         c, r = move_info.sp_pos
         piece = move_info.sp
         pp = move_info.pp
+        castling = move_info.castling
+
         piece.go_to(c, r)
+        piece.has_moved = move_info.source_piece_has_moved
+
         self.state[r][self.get_letter_from_index(c)] = piece
+
+        if castling == CastlingSides.king:
+            rook = self.get_piece_at(piece.col + 1, piece.row)
+            rook.go_to(piece.col + 3, piece.row)
+
+        if castling == CastlingSides.queen:
+            rook = self.get_piece_at(piece.col - 1, piece.row)
+            rook.go_to(piece.col - 3, piece.row)
+
         assert 9 > r > 0
+
         eaten_piece = move_info.piece_at_target
         self.state[move_info.pos_of_piece_at_target[1]][
             Board.get_letter_from_index(move_info.pos_of_piece_at_target[0])] = eaten_piece
+
         assert 9 > move_info.pos_of_piece_at_target[1] > 0
 
         if not move_info.lw:
             if eaten_piece is not None:
                 jail_for_color = self.jail[eaten_piece.color]
+
                 assert eaten_piece.get_name() in jail_for_color
+
                 count_of_eaten_piece = jail_for_color[eaten_piece.get_name()]
                 jail_for_color[eaten_piece.get_name()] = count_of_eaten_piece - 1
+
                 self.won = self.has_won()
 
-    def go_to(self, c, r, piece, lw=False) -> undo_move.UndoMove:
+    def go_to(self, c, r, piece, lw=False, castling=CastlingSides.none) -> undo_move.UndoMove:
         """
         :param c: c
         :param r: r
         :param lw: lightweight
+        :param castling:
         :param piece: this piece is going to be moved from piece.row/col to c, r
-        :return:
+        :return: move Information
         """
 
         eaten_piece: pieces.Piece = self.state[r][Board.get_letter_from_index(c)]
@@ -205,6 +235,15 @@ class Board:
 
         if pp:
             self.modify_pos(c, r, pieces.Queen(piece.color, c, r))
+
+        if castling == CastlingSides.king:
+            rook = self.get_piece_at(piece.col + 3, piece.row)
+            rook.go_to(piece.col, piece.row)
+
+
+        elif castling == CastlingSides.queen:
+            rook = self.get_piece_at(piece.col - 4, piece.row)
+            rook.go_to(piece.col - 1, piece.row)
 
         if not lw:
             if eaten_piece is not None:
@@ -364,27 +403,46 @@ class Board:
         return None
 
     def filter_moves_if_opponent_can_reach(self, piece: pieces.Piece,
-                                           pos: tuple[int, int], valid_moves: set | None):
+                                           pos: tuple[int, int], valid_moves: set | None) -> set | None:
         """
         edit valid_moves and remove illegal moves
         checks whether there exists an opponent piece that can reach the pos
         when the piece is moved to each of its valid moves
-        :param piece:
-        :param pos:
-        :param valid_moves: this is modified in place by this function
-        :return: nothing
+
+        2 cases:
+        1) pos is None: (piece is a king) we filter all valid moves that can be reached by an opponent
+         (we use piece just to get the color of the opponent)
+          basically we remove all king's valid moves that will put it under check
+        2) pos is not None: pos is the position of the king of the color of the piece:
+         we remove all valid moves of the piece that allow the opponent to reach the given pos
+          basically we leave only the valid moves that protect the king
+
+        :param piece: the piece moving
+        :param pos: the pos the opponent can reach or not
+        :param valid_moves: this is modified in place by this method
+        :return: the new valid moves
         """
         assert piece is not None
 
+        # Checks if the king is moving
+        # This way when we move the king, *pos* will change with the movement of the king
         check_valid_move4piece = pos is None
+        assert (pos is None and isinstance(piece,
+                                           pieces.King)) or (
+                       self.get_king(piece.color).get_pos() == pos and piece != self.get_king(
+                   piece.color))  # True if *piece* is a king else False
 
         vm = set()
 
         if valid_moves is not None:
             for move in valid_moves:
                 if check_valid_move4piece:
+                    # If the king is moving we should just get the current pos
                     pos = move
-                undo = self.go_to(*move, piece, lw=True)
+
+                move = move + (CastlingSides.none,) if len(move) < 3 else move
+
+                undo = self.go_to(*move[:-1], piece=piece, lw=True, castling=move[2])
                 opp_pieces = self.get_pieces()[not piece.color]
 
                 for op in opp_pieces:
@@ -399,6 +457,8 @@ class Board:
 
             valid_moves.difference_update(vm)
 
+        return valid_moves
+
     @staticmethod
     def starting_position():
         return "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w"
@@ -408,12 +468,12 @@ class Board:
 
         whites = ps[True]
         white_kut = self.get_king(True)
-        white_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
+        white_checkmate = not (any(map(lambda x: x.get_valid_moves(self, no_turn=True, _filter=False),
                                        whites))) and white_kut is not None
 
         blacks = ps[False]
         black_kut = self.get_king(False)
-        black_checkmate = not (any(map(lambda x: x.get_valid_moves(self, True),
+        black_checkmate = not (any(map(lambda x: x.get_valid_moves(self, no_turn=True, _filter=False),
                                        blacks))) and black_kut is not None
 
         if white_checkmate or black_checkmate:

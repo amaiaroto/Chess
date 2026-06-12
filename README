@@ -12,6 +12,9 @@ TODOs:
         # 7. add counts of taken pieces (done)
         # 8. add turn info in fen (done)
 
+6/11+
+- review castling from undo_move (robotics only)
+
 6/6
 - add pawn promotion (check)
 - add stalemate messaging (check)

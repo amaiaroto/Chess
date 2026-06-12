@@ -1,3 +1,5 @@
+from enum import Enum
+
 piece_icons: dict[str, str] = {
     "K": "♔",
     "Q": "♕",
@@ -13,6 +15,12 @@ piece_icons: dict[str, str] = {
     "n": "♞",
     "p": "♟",
 }
+
+
+class CastlingSides(Enum):
+    none = 0
+    king = 1
+    queen = 2
 
 
 def flatten(*iterable, keep_duplicates: bool = False) -> set | list:
@@ -62,6 +70,7 @@ class Piece:
         self.col: int = col
         self.row: int = row
         self.value: int = 1
+        self.has_moved = False
         self.set_name()
 
     def set_name(self) -> None:
@@ -89,13 +98,14 @@ class Piece:
     def get_valid_moves(self, board, no_turn=False, _filter=True) -> set:
         ...
 
-    def go_to(self, c: int, r: int):
+    def go_to(self, c: int, r: int) -> tuple:
         try:
             assert 0 < c < 9 and 0 < r < 9
 
         except AssertionError:
             return self.col, self.row
 
+        self.has_moved = True
         self.col = c
         self.row = r
 
@@ -105,7 +115,7 @@ class Piece:
         pass
 
     @staticmethod
-    def create_piece(name: str, color: bool, col: int, row: int):
+    def create_piece(name: str, color: bool, col: int, row: int) -> Piece | None:
         for c in Piece.__subclasses__():
             if c.standard_name == name.lower():
                 return c(color, col, row)
@@ -113,15 +123,20 @@ class Piece:
         raise PieceError("Piece Not Found")
 
     @staticmethod
-    def get_piece(name: str):
+    def get_piece(name: str) -> type[Piece]:
         for c in Piece.__subclasses__():
             if c.standard_name == name.lower():
                 return c
 
         raise PieceError("Invalid Piece Name")
 
-    def line_movement(self, dr: int, dc: int, board, max_range, color):
+    def line_movement(self, dr: int, dc: int, board, max_range, color) -> set:
         """
+        returns the set of tuples that represent the coordinates of the cells of the board in a line starting at
+        (self.c+dc,self.r+dr) going in direction dc/dr (e.g. if dc is -1 we go left) up to max_range moves (stops when we reach max_range
+        moves or the board size or a piece). we include the move that eat a piece of the opposite color (as last move in the
+        line)
+
         :param color: piece color
         :param dr: delta row
         :param dc: delta col
@@ -129,6 +144,7 @@ class Piece:
         :param max_range: 0 based
         :return: valid moves
         """
+        assert (2 > abs(dc) > -1) and (2 > abs(dr) > -1)
         c = self.col
         r = self.row
         valid_moves = set()
@@ -162,11 +178,16 @@ class Piece:
         return f"{self.get_name()} {self.get_pos()}"
 
 
+# Pieces
+# (Listed by value)
+
+
 class Pawn(Piece):
     standard_name = "p"
 
     def __init__(self, color: bool, col: int, row: int):
         super().__init__(Pawn.standard_name, color, col, row)
+        self.value = 1
 
     def get_valid_moves(self, board, no_turn=False, _filter=True):
         valid_moves: set = set()
@@ -204,30 +225,6 @@ class Pawn(Piece):
             board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
 
         return valid_moves
-
-
-class Rook(Piece):
-    standard_name = "r"
-
-    def __init__(self, color: bool, col: int, row: int):
-        super().__init__(Rook.standard_name, color, col, row)
-        self.value = 5
-
-    def get_valid_moves(self, board, no_turn=False, _filter=True):
-        if self.color == board.turn or no_turn:
-            a = self.line_movement(1, 0, board, 8, self.color)
-            b = self.line_movement(-1, 0, board, 8, self.color)
-            c = self.line_movement(0, 1, board, 8, self.color)
-            d = self.line_movement(0, -1, board, 8, self.color)
-
-            valid_moves = flatten(a, b, c, d)
-
-            if _filter:
-                board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
-
-            return valid_moves
-
-        return None
 
 
 class Knight(Piece):
@@ -270,6 +267,30 @@ class Bishop(Piece):
             b = self.line_movement(1, -1, board, 8, self.color)
             c = self.line_movement(1, 1, board, 8, self.color)
             d = self.line_movement(-1, -1, board, 8, self.color)
+
+            valid_moves = flatten(a, b, c, d)
+
+            if _filter:
+                board.filter_moves_if_opponent_can_reach(self, board.get_king(self.color).get_pos(), valid_moves)
+
+            return valid_moves
+
+        return None
+
+
+class Rook(Piece):
+    standard_name = "r"
+
+    def __init__(self, color: bool, col: int, row: int):
+        super().__init__(Rook.standard_name, color, col, row)
+        self.value = 5
+
+    def get_valid_moves(self, board, no_turn=False, _filter=True):
+        if self.color == board.turn or no_turn:
+            a = self.line_movement(1, 0, board, 8, self.color)
+            b = self.line_movement(-1, 0, board, 8, self.color)
+            c = self.line_movement(0, 1, board, 8, self.color)
+            d = self.line_movement(0, -1, board, 8, self.color)
 
             valid_moves = flatten(a, b, c, d)
 
@@ -334,15 +355,21 @@ class King(Piece):
             f = self.line_movement(-1, -1, board, 0, self.color)
             g = self.line_movement(0, -1, board, 0, self.color)
             h = self.line_movement(1, -1, board, 0, self.color)
-            # i = {(self.row, self.col - 2)} if board.filter_moves_if_opponent_can_reach(self, None,
-            #                                                                            {(self.row,
-            #                                                                              self.col)}) else set()
-            # j = {(self.row, self.col + 2)}
+            i = set()
+            rook = board.get_piece_at(self.col + 2, self.row)
+
+            if rook is not None and not rook.has_moved and not self.has_moved and self.under_threat(board):
+                if _filter:
+                    if len(board.filter_moves_if_opponent_can_reach(self, None, self.line_movement(0, 1, board,
+                                                                                                   rook.col - self.col - 1,
+                                                                                                   self.color))) == (
+                            rook.col - self.col):
+                        i = {(self.col + 2, self.row)}
 
             o = flatten(a, b, c, d, e, f, g, h)
 
             if _filter:
-                # removes the king"s valid moves that/are reachable by opponent pieces
+                # removes the king's valid moves (that are) reachable by opponent pieces
                 board.filter_moves_if_opponent_can_reach(self, None, o)
 
             return o
@@ -351,7 +378,7 @@ class King(Piece):
 
     def under_threat(self, board) -> bool:
         for p in board.get_pieces()[not self.color]:
-            p_valid_moves = p.get_valid_moves(board, True)
+            p_valid_moves = p.get_valid_moves(board, no_turn=True, _filter=False)
 
             if p_valid_moves is not None:
                 if self.get_pos() in p_valid_moves:
