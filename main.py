@@ -282,7 +282,7 @@ while True:
             mate = board.checkmate()
             if mate:
                 if mate == Mate.checkmate:
-                    Popup(not player_color, screen)
+                    Popup(not board.turn, screen)
 
                 elif mate == Mate.stalemate:
                     Popup2(screen)
