@@ -175,20 +175,11 @@ class Board:
         c, r = move_info.sp_pos
         piece = move_info.sp
         pp = move_info.pp
-        castling = move_info.castling
 
         piece.go_to(c, r)
         piece.has_moved = move_info.source_piece_has_moved
 
         self.state[r][self.get_letter_from_index(c)] = piece
-
-        if castling == CastlingSides.king:
-            rook = self.get_piece_at(piece.col + 1, piece.row)
-            rook.go_to(piece.col + 3, piece.row)
-
-        if castling == CastlingSides.queen:
-            rook = self.get_piece_at(piece.col - 1, piece.row)
-            rook.go_to(piece.col - 3, piece.row)
 
         assert 9 > r > 0
 
@@ -197,6 +188,21 @@ class Board:
             Board.get_letter_from_index(move_info.pos_of_piece_at_target[0])] = eaten_piece
 
         assert 9 > move_info.pos_of_piece_at_target[1] > 0
+
+        castling = move_info.castling
+        if castling == CastlingSides.king:
+            rook = self.get_piece_at(piece.col + 1, piece.row)
+            rook.go_to(8, piece.row)
+            rook.has_moved = False
+            self.state[piece.row][Board.get_letter_from_index(8)] = rook
+            self.state[piece.row][Board.get_letter_from_index(piece.col + 1)] = None
+
+        if castling == CastlingSides.queen:
+            rook = self.get_piece_at(piece.col - 1, piece.row)
+            rook.go_to(1, piece.row)
+            rook.has_moved = False
+            self.state[piece.row][Board.get_letter_from_index(1)] = rook
+            self.state[piece.row][Board.get_letter_from_index(piece.col - 1)] = None
 
         if not move_info.lw:
             if eaten_piece is not None:
@@ -209,7 +215,7 @@ class Board:
 
                 self.won = self.has_won()
 
-    def go_to(self, c, r, piece, lw=False, castling=CastlingSides.none) -> undo_move.UndoMove:
+    def go_to(self, c, r, piece, lw=False) -> undo_move.UndoMove:
         """
         :param c: c
         :param r: r
@@ -231,19 +237,31 @@ class Board:
         assert 9 > r > 0
         self.state[r][Board.get_letter_from_index(c)] = piece
 
+        castling = move_info.castling
+
+        # castling need to happen before the king moves as the rook movement is based on the original king pos
+        if castling == CastlingSides.king:
+            rook = self.get_piece_at(8, piece.row)
+            assert isinstance(rook, pieces.Rook)
+            assert (piece.col + 1) == 6
+            rook.go_to(piece.col + 1, piece.row)
+            self.state[piece.row][Board.get_letter_from_index(8)] = None
+            self.state[piece.row][Board.get_letter_from_index(piece.col + 1)] = rook
+
+        elif castling == CastlingSides.queen:
+            rook = self.get_piece_at(1, piece.row)
+            assert isinstance(rook, pieces.Rook)
+            assert (piece.col - 1) == 4
+            rook.go_to(piece.col - 1, piece.row)
+            self.state[piece.row][Board.get_letter_from_index(1)] = None
+            self.state[piece.row][Board.get_letter_from_index(piece.col - 1)] = rook
+
         piece.go_to(c, r)
 
         if pp:
             self.modify_pos(c, r, pieces.Queen(piece.color, c, r))
 
-        if castling == CastlingSides.king:
-            rook = self.get_piece_at(piece.col + 3, piece.row)
-            rook.go_to(piece.col, piece.row)
 
-
-        elif castling == CastlingSides.queen:
-            rook = self.get_piece_at(piece.col - 4, piece.row)
-            rook.go_to(piece.col - 1, piece.row)
 
         if not lw:
             if eaten_piece is not None:
@@ -440,9 +458,7 @@ class Board:
                     # If the king is moving we should just get the current pos
                     pos = move
 
-                move = move + (CastlingSides.none,) if len(move) < 3 else move
-
-                undo = self.go_to(*move[:-1], piece=piece, lw=True, castling=move[2])
+                undo = self.go_to(*move, piece=piece, lw=True)
                 opp_pieces = self.get_pieces()[not piece.color]
 
                 for op in opp_pieces:
@@ -468,18 +484,23 @@ class Board:
 
         whites = ps[True]
         white_kut = self.get_king(True)
-        white_checkmate = not (any(map(lambda x: x.get_valid_moves(self, no_turn=True, _filter=False),
-                                       whites))) and white_kut is not None
+        white_valid_moves = any(map(lambda x: x.get_valid_moves(self, no_turn=True),
+                                    whites))
 
         blacks = ps[False]
         black_kut = self.get_king(False)
-        black_checkmate = not (any(map(lambda x: x.get_valid_moves(self, no_turn=True, _filter=False),
-                                       blacks))) and black_kut is not None
+        black_valid_moves = any(map(lambda x: x.get_valid_moves(self, no_turn=True),
+                                    blacks))
 
-        if white_checkmate or black_checkmate:
-            if white_kut.under_threat(self) or black_kut.under_threat(self):
+        if white_kut is not None and not white_valid_moves:
+            if white_kut.under_threat(self):
                 return Mate.checkmate
+            else:
+                return Mate.stalemate
 
+        if black_kut is not None and not black_valid_moves:
+            if black_kut.under_threat(self):
+                return Mate.checkmate
             else:
                 return Mate.stalemate
 

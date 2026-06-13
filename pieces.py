@@ -356,17 +356,27 @@ class King(Piece):
             g = self.line_movement(0, -1, board, 0, self.color)
             h = self.line_movement(1, -1, board, 0, self.color)
             i = set()
-            rook = board.get_piece_at(self.col + 2, self.row)
+            rook = board.get_piece_at(8, self.row)
 
-            if rook is not None and not rook.has_moved and not self.has_moved and self.under_threat(board):
-                if _filter:
+            if _filter:  # approximation, we should add a _filter to the filter_va;lid_moves method
+                if rook is not None and not rook.has_moved and not self.has_moved and not self.under_threat(board):
+                    cells_in_between = rook.col - self.col - 1
                     if len(board.filter_moves_if_opponent_can_reach(self, None, self.line_movement(0, 1, board,
-                                                                                                   rook.col - self.col - 1,
+                                                                                                   cells_in_between,
                                                                                                    self.color))) == (
-                            rook.col - self.col):
-                        i = {(self.col + 2, self.row)}
+                            cells_in_between):
+                        i.add((self.col + 2, self.row))
+            rook = board.get_piece_at(1, self.row)
 
-            o = flatten(a, b, c, d, e, f, g, h)
+            if _filter:
+                if rook is not None and not rook.has_moved and not self.has_moved and not self.under_threat(board):
+                    cells_in_between = self.col - rook.col - 1
+                    if len(board.filter_moves_if_opponent_can_reach(self, None, self.line_movement(0, -1, board,
+                                                                                                   cells_in_between,
+                                                                                                   self.color))) == (
+                            cells_in_between):
+                        i.add((self.col - 2, self.row))
+            o = flatten(a, b, c, d, e, f, g, h, i)
 
             if _filter:
                 # removes the king's valid moves (that are) reachable by opponent pieces

@@ -191,7 +191,6 @@ def start_chess() -> bool:
 
 
 # create the UI state
-sys.setrecursionlimit(11)
 
 while True:
     # State.draw()

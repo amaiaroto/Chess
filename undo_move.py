@@ -11,7 +11,7 @@ class UndoMove:
         delta = source_piece.col - target_pos[0]
         castling = CastlingSides.none
         if abs(delta) > 1 and isinstance(source_piece, pieces.King):
-            castling = CastlingSides.king if delta > 0 else CastlingSides.queen
+            castling = CastlingSides.king if delta < 0 else CastlingSides.queen
         self.source_piece_has_moved = source_piece.has_moved
         self.sp = source_piece
         self.sp_pos = source_piece.get_pos()

@@ -177,8 +177,15 @@ class ChessTest(unittest.TestCase):
         self.assertEqual(_board.checkmate(), board.Mate.checkmate)
 
     def test_stalemate(self):
+        """
+        k . . . .
+        . . Q .
+        . . . .
+        K
+        :return:
+        """
         _board = board.Board(fen="k7/2Q5/8/K7/8/8/8/8 b")
-        self.assertEqual(_board.checkmate(), board.Mate.stalemate)
+        self.assertEqual(board.Mate.stalemate, _board.checkmate())
 
     def test_pawn_promotion(self):
         _board = board.Board(fen="8/P7/8/8/k6K/8/8/7p w")
@@ -199,6 +206,74 @@ class ChessTest(unittest.TestCase):
         vm = pawn.get_valid_moves(_board)
         self.assertEqual(vm, {(1, 3), (2, 3)})
 
+    def test_castling(self):
+        """
+        r . . . k . . r
+        . . . . . . . .
+        . . . . . . . .
+        . . . . . . . .
+        R . . . K . . R
+        """
+        _board = board.Board(fen="r3k2r/8/8/8/8/8/8/R3K2R w")
+        # black
+        bk = _board.get_king(False)
+        bkr = _board.get_piece_at(8, 8)
+        bqr = _board.get_piece_at(1, 8)
+        bvms = bk.get_valid_moves(_board, no_turn=True)
+        self.assertEqual(len(bvms), 7)
+        self.assertFalse(bk.has_moved)
+        self.assertFalse(bkr.has_moved)
+        self.assertFalse(bqr.has_moved)
+        self.assertTrue((7, 8) in bvms)
+        self.assertTrue((3, 8) in bvms)
+        # black king side testing
+        ui = _board.go_to(7, 8, bk, lw=True)
+        self.assertEqual("r4rk1/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        self.assertTrue(bkr.has_moved)
+        self.assertTrue(bk.has_moved)
+        _board.undo_go_to(ui)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        # black queen side testing
+        self.assertFalse(bqr.has_moved)
+        self.assertFalse(bk.has_moved)
+        ui = _board.go_to(3, 8, bk, lw=True)
+        self.assertEqual("2kr3r/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        self.assertTrue(bqr.has_moved)
+        self.assertTrue(bk.has_moved)
+        _board.undo_go_to(ui)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        self.assertFalse(bqr.has_moved)
+        self.assertFalse(bk.has_moved)
+
+        # white
+        wk = _board.get_king(True)
+        wkr = _board.get_piece_at(8, 1)
+        wqr = _board.get_piece_at(1, 1)
+        wvms = wk.get_valid_moves(_board, no_turn=True)
+        self.assertEqual(len(wvms), 7)
+        self.assertFalse(wk.has_moved)
+        self.assertFalse(wkr.has_moved)
+        self.assertFalse(wqr.has_moved)
+        self.assertTrue((7, 1) in wvms)
+        self.assertTrue((3, 1) in wvms)
+        # white king side testing
+        ui = _board.go_to(7, 1, wk, lw=True)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/R4RK1 w", _board.exportFEN())
+        self.assertTrue(wkr.has_moved)
+        self.assertTrue(wk.has_moved)
+        _board.undo_go_to(ui)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        # white queen side testing
+        self.assertFalse(wqr.has_moved)
+        self.assertFalse(wk.has_moved)
+        ui = _board.go_to(3, 1, wk, lw=True)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/2KR3R w", _board.exportFEN())
+        self.assertTrue(wqr.has_moved)
+        self.assertTrue(wk.has_moved)
+        _board.undo_go_to(ui)
+        self.assertEqual("r3k2r/8/8/8/8/8/8/R3K2R w", _board.exportFEN())
+        self.assertFalse(wqr.has_moved)
+        self.assertFalse(wk.has_moved)
 
 if __name__ in {"__main__", "__main_mp__"}:
     logger = logging.getLogger(__name__)
